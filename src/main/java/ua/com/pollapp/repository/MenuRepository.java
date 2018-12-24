@@ -21,29 +21,27 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     @Transactional
     Menu save(Menu menu);
 
-    // return false if not found
     @Transactional
     @Modifying
     @Query("DELETE FROM Menu m WHERE m.id=:id")
     int deleteById(@Param("id") int id);
 
-    @EntityGraph(attributePaths = {"dish", "restaurant"})
-    List<Menu> getByRestaurant(Restaurant restaurant, Sort sort);
-
-    @EntityGraph(attributePaths = {"dish", "restaurant"})
-    List<Menu> getByDate(LocalDate date);
-
-    @EntityGraph(attributePaths = {"dish", "restaurant"})
-    List<Menu> getByRestaurantAndDate(Restaurant restaurant, LocalDate date, Sort sort);
-
-    // returns null if not found
     @Override
     @EntityGraph(attributePaths = {"dish", "restaurant"})
     Optional<Menu> findById(Integer menuId);
 
-    // returns null if not found
     @Override
     @EntityGraph(attributePaths = {"dish", "restaurant"})
     List<Menu> findAll(Sort sort);
+
+    @EntityGraph(attributePaths = {"dish", "restaurant"})
+    List<Menu> findByRestaurant(Restaurant restaurant);
+
+    @EntityGraph(attributePaths = {"dish", "restaurant"})
+    List<Menu> findByDate(LocalDate date);
+
+    @EntityGraph(attributePaths = {"dish", "restaurant"})
+    List<Menu> findByRestaurantAndDate(Restaurant restaurant, LocalDate date);
+
 
 }

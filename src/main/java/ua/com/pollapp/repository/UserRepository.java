@@ -18,11 +18,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     User save(User user);
 
-    // returns null if not found
     @Override
     Optional<User> findById(Integer id);
 
-    // return false if not found
     @Transactional
     @Modifying
     @Query("DELETE FROM User u WHERE u.id=:id")
@@ -31,7 +29,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Override
     List<User> findAll(Sort sort);
 
-    // returns null if not found
-    User getByEmail(String email);
+    User findByEmail(String email);
 
 }

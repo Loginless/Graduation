@@ -18,19 +18,16 @@ public interface DishRepository extends JpaRepository<Dish, Integer> {
     @Transactional
     Dish save(Dish dish);
 
-    // return false if not found
     @Transactional
     @Modifying
     @Query("DELETE FROM Dish d WHERE d.id=:id")
-    int deleteById(@Param("id") int id);
+    int deleteById(@Param("id") int dishId);
 
-    // returns null if not found
-    Optional<Dish> findById(Integer integer);
+    Optional<Dish> findById(Integer dishId);
 
     @Override
     List<Dish> findAll(Sort sort);
 
-    // returns null if not found
-    Optional<Dish> getByDishName(String dishName);
+    Optional<Dish> findByDishName(String dishName);
 
 }

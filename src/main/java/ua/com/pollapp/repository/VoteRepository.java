@@ -12,7 +12,18 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 public interface VoteRepository extends JpaRepository<Vote, Integer> {
+
+    @Override
+    @Transactional
+    Vote save(Vote vote);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Vote v WHERE v.id=:id")
+    int delete(@Param("id") int id);
+
     @Override
     @EntityGraph(attributePaths = {"user", "restaurant"})
     List<Vote> findAll();
@@ -22,18 +33,15 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     Optional<Vote> findById(Integer integer);
 
     @EntityGraph(attributePaths = {"user", "restaurant"})
+    Optional<Vote> findByUserIdAndDate(int userId, LocalDate date);
+
+    @EntityGraph(attributePaths = {"user", "restaurant"})
     List<Vote> findByDate(LocalDate date);
 
     @EntityGraph(attributePaths = {"user", "restaurant"})
     List<Vote> findByRestaurantIdAndDate(int restaurantId, LocalDate date);
 
-    @EntityGraph(attributePaths = {"user", "restaurant"})
-    Optional<Vote> findByUserIdAndDate(int userId, LocalDate date);
-
     Long countAllByRestaurantIdAndDate(int restaurantId, LocalDate date);
 
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM Vote v WHERE v.id=:id")
-    int delete(@Param("id") int id);
+
 }

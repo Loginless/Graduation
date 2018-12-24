@@ -19,19 +19,17 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Transactional
     Restaurant save(Restaurant restaurant);
 
-    // returns null if not found
-    @Override
-    @EntityGraph(attributePaths = {"menu", "votes"})
-    Optional<Restaurant> findById(Integer integer);
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Restaurant r WHERE r.id=:id")
+    int deleteById(@Param("id") int id);
 
     @Override
     @EntityGraph(attributePaths = {"menu", "votes"})
     List<Restaurant> findAll(Sort sort);
 
-    // return false if not found
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM Restaurant r WHERE r.id=:id")
-    int deleteById(@Param("id") int id);
+    @Override
+    @EntityGraph(attributePaths = {"menu", "votes"})
+    Optional<Restaurant> findById(Integer restaurantId);
 
 }
