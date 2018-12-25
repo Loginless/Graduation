@@ -10,6 +10,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DishTestData {
     public static final int DISH1_ID = AbstractBaseEntity.START_SEQ + 6;
     public static final int DISH_FALSE_ID = AbstractBaseEntity.START_SEQ + 100;
+    public static final String DISH1_NAME = "Steak";
+    public static final String DISH1_FALSE_NAME = "Antricot";
 
 
     public static final Dish DISH1 = new Dish(100006, "Steak");

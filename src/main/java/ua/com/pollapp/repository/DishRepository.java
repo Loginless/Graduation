@@ -28,6 +28,6 @@ public interface DishRepository extends JpaRepository<Dish, Integer> {
     @Override
     List<Dish> findAll(Sort sort);
 
-    Optional<Dish> findByDishName(String dishName);
+    Dish findByDishName(String dishName);
 
 }

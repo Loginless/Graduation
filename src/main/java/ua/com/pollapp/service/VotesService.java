@@ -13,16 +13,17 @@ public interface VotesService {
 
     void delete(int voteId) throws NotFoundException;
 
-    Vote findById(int voteId) throws NotFoundException;
-
     List<Vote> findAll();
+
+    Vote findById(int voteId) throws NotFoundException;
 
     List<Vote> findByDate(LocalDate voteDate);
 
-    List<Vote> findByRestaurantIdAndDate(int restaurantId, LocalDate voteDate);
+    Vote findByUserIdAndVoteDate(int userId, LocalDate voteDate) throws NotFoundException;
 
-    Vote findByUserIdAndDate(int userId, LocalDate voteDate) throws NotFoundException;
+    List<Vote> findByRestaurantIdAndVoteDate(int restaurantId, LocalDate date);
 
     Long countVotes(int restaurantId, LocalDate voteDate);
+
 
 }

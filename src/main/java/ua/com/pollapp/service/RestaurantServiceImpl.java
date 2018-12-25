@@ -13,7 +13,7 @@ import java.util.List;
 import static ua.com.pollapp.util.ValidationUtil.checkNotFoundWithId;
 
 @Service("restaurantService")
-public class RestaurantServiceImpl extends RestaurantService {
+public class RestaurantServiceImpl implements RestaurantService {
 
     RestaurantRepository restaurantRepository;
 

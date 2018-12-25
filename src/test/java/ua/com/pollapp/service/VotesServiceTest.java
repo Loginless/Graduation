@@ -1,19 +1,22 @@
 package ua.com.pollapp.service;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ua.com.pollapp.model.Restaurant;
-import ua.com.pollapp.model.Votes;
+import ua.com.pollapp.model.Vote;
+import ua.com.pollapp.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ua.com.pollapp.testdata.RestaurantTestData.RESTAURANT1;
-import static ua.com.pollapp.testdata.UserTestData.*;
+import static ua.com.pollapp.testdata.RestaurantTestData.RESTRAUNT_ID;
+import static ua.com.pollapp.testdata.UserTestData.USER;
+import static ua.com.pollapp.testdata.UserTestData.USER_ID;
 import static ua.com.pollapp.testdata.VotesTestData.*;
-import static ua.com.pollapp.testdata.VotesTestData.assertMatch;
 
 
 public class VotesServiceTest extends AbstractServiceTest {
@@ -23,37 +26,60 @@ public class VotesServiceTest extends AbstractServiceTest {
 
     @Test
     public void create() {
-        Votes newVote = new Votes(USER, RESTAURANT1, LocalDateTime.of(2018, 12, 03, 10, 00, 00));
-        Votes created = votesService.create(newVote, ADMIN_ID);
+        Vote newVote = new Vote(USER, RESTAURANT1, LocalDate.of(2018, 12, 03));
+        Vote created = votesService.save(USER_ID, RESTRAUNT_ID, LocalDateTime.of(2018, 12, 03, 10, 00, 00));
         newVote.setId(created.getId());
         assertMatch(votesService.findAll(), VOTE1, VOTE2, VOTE3, VOTE4, VOTE5, newVote);
     }
 
     @Test
     public void update() {
-        Votes updated = getUpdated();
-        votesService.update(updated, USER_ID);
-        assertMatch(votesService.get(VOTE1_ID, USER_ID), updated);
+        Vote updated = getUpdated();
+        votesService.save(updated.getUser().getId(), updated.getRestaurant().getId(), LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 20, 11)));
+        assertMatch(votesService.findById(VOTE6.getId()), updated);
     }
 
-//    @Test
-//    void updateNotFound() throws Exception {
-//        NotFoundException e = assertThrows(NotFoundException.class, () -> votesService.update(VOTE1, ADMIN_ID));
-//        assertEquals(e.getMessage(), "Not found entity with id=" + VOTE1_ID);
-//    }
+    @Test
+    public void findAll() {
+        List<Vote> all = votesService.findAll();
+        assertMatch(all, VOTE1, VOTE2, VOTE3, VOTE4, VOTE5);
+    }
 
     @Test
-    public void getAll() {
-        List<Votes> all = votesService.findAll();
-        assertMatch(all, VOTE1, VOTE2, VOTE3, VOTE4, VOTE5);
+    public void findById() {
+        Vote vote = votesService.findById(VOTE1_ID);
+        assertMatch(vote, VOTE1);
+    }
+
+    @Test
+    void findByIdNotFound() throws Exception {
+        assertThrows(NotFoundException.class, () ->
+                votesService.findById(VOTE_FALSE_ID));
+    }
+
+    @Test
+    public void findByDate() {
+        List<Vote> votesByDate = votesService.findByDate(LocalDate.of(2018, 12, 01));
+        assertMatch(votesByDate, VOTE1, VOTE2);
+    }
+
+    @Test
+    public void findByUserIdAndVoteDate() {
+        Vote vote = votesService.findByUserIdAndVoteDate(USER_ID, LocalDate.of(2018, 12, 01));
+        assertMatch(vote, VOTE1);
+    }
+
+    @Test
+    public void findByRestaurantIdAndVoteDate() {
+        List<Vote> votesByRestaurantIdAndVoteDate = votesService.findByRestaurantIdAndVoteDate(RESTRAUNT_ID, LocalDate.of(2018, 12, 02));
+        assertMatch(votesByRestaurantIdAndVoteDate, VOTE5);
     }
 
     @Test
     public void countVotesByRestaurant() {
         LocalDate testDate = LocalDate.of(2018, 12, 02);
-        Map<Restaurant, Long> votingResult = votesService.countVotesByDate(testDate);
-        assertMatch(votingResult, VOTINGRESULTS);
-
+        Long votingResult = votesService.countVotes(RESTRAUNT_ID + 1, testDate);
+        Assertions.assertThat(votingResult).isEqualTo(2L);
     }
 
 }

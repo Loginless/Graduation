@@ -3,7 +3,7 @@ package ua.com.pollapp.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "restaurant", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "address"}, name = "restaurant_unique_restaurant_id_idx")})
@@ -22,10 +22,10 @@ public class Restaurant extends AbstractNamedEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("date DESC")
-    protected List<Menu> menu;
+    protected Set<Menu> menu;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    protected List<Vote> votes;
+    protected Set<Vote> votes;
 
     public Restaurant() {
     }
@@ -60,19 +60,19 @@ public class Restaurant extends AbstractNamedEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<Menu> getMenu() {
+    public Set<Menu> getMenu() {
         return menu;
     }
 
-    public void setMenu(List<Menu> menu) {
+    public void setMenu(Set<Menu> menu) {
         this.menu = menu;
     }
 
-    public List<Vote> getVotes() {
+    public Set<Vote> getVotes() {
         return votes;
     }
 
-    public void setVotes(List<Vote> votes) {
+    public void setVotes(Set<Vote> votes) {
         this.votes = votes;
     }
 

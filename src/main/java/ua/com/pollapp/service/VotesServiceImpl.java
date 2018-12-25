@@ -9,6 +9,7 @@ import ua.com.pollapp.model.Vote;
 import ua.com.pollapp.repository.RestaurantRepository;
 import ua.com.pollapp.repository.UserRepository;
 import ua.com.pollapp.repository.VoteRepository;
+import ua.com.pollapp.util.exception.NotFoundException;
 import ua.com.pollapp.util.exception.VoteTimeOutException;
 
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import static ua.com.pollapp.util.ValidationUtil.checkNotFound;
 import static ua.com.pollapp.util.ValidationUtil.checkNotFoundWithId;
 
 
@@ -39,18 +41,17 @@ public class VotesServiceImpl implements VotesService {
 
     @Override
     public Vote save(int userId, int restaurantId, LocalDateTime dateTime) {
-        Optional<Vote> voteOptional = voteRepository.findByUserIdAndDate(userId, dateTime.toLocalDate());
+        Optional<Vote> voteOptional = voteRepository.findByUserIdAndVoteDate(userId, dateTime.toLocalDate());
         if (voteOptional.isPresent()
                 && dateTime.toLocalDate().equals(LocalDate.now())
                 && dateTime.toLocalTime().isBefore(VOTE_DEAD_LINE)
                 ) {
             Vote updateVote = voteOptional.get();
-            updateVote.setRestaurant(restaurantRepository.getOne(restaurantId));
             return update(updateVote, restaurantId);
         } else if (!voteOptional.isPresent()) {
             return create(userId, restaurantId, dateTime);
         } else {
-            throw new VoteTimeOutException("Vote Dear Line is: " + VOTE_DEAD_LINE);
+            throw new VoteTimeOutException("Vote Dead Line is: " + VOTE_DEAD_LINE);
         }
     }
 
@@ -65,7 +66,7 @@ public class VotesServiceImpl implements VotesService {
     private Vote create(int userId, int restaurantId, LocalDateTime dateTime) {
         User user = userRepository.getOne(userId);
         Restaurant restaurant = restaurantRepository.getOne(restaurantId);
-        Vote vote = new Vote(user, restaurant, dateTime);
+        Vote vote = new Vote(user, restaurant, dateTime.toLocalDate());
         return voteRepository.save(vote);
     }
 
@@ -75,33 +76,35 @@ public class VotesServiceImpl implements VotesService {
     }
 
     @Override
-    public Vote findById(int voteId) {
-        return checkNotFoundWithId(voteRepository.findById(voteId).orElse(null), voteId);
-    }
-
-    @Override
-    public Vote findByUserIdAndDate(int userId, LocalDate voteDate) {
-        return checkNotFoundWithId(voteRepository.findByUserIdAndDate(userId, voteDate).orElse(null), userId);
-    }
-
-    @Override
     public List<Vote> findAll() {
         return voteRepository.findAll();
     }
 
     @Override
-    public List<Vote> findByDate(LocalDate voteDate) {
-        return voteRepository.findByDate(voteDate);
+    public Vote findById(int voteId) {
+        return checkNotFoundWithId(voteRepository.findById(voteId).orElse(null), voteId);
     }
 
     @Override
-    public List<Vote> findByRestaurantIdAndDate(int restaurantId, LocalDate voteDate) {
-        return voteRepository.findByRestaurantIdAndDate(restaurantId, voteDate);
+    public List<Vote> findByDate(LocalDate voteDate) {
+        return voteRepository.findByVoteDate(voteDate);
     }
+
+    @Override
+    public Vote findByUserIdAndVoteDate(int userId, LocalDate voteDate) throws NotFoundException {
+        return checkNotFound(voteRepository.findByUserIdAndVoteDate(userId, voteDate).orElse(null),
+                "userId and voteDate =" + userId + ", " + voteDate);
+    }
+
+    @Override
+    public List<Vote> findByRestaurantIdAndVoteDate(int restaurantId, LocalDate voteDate) {
+        return voteRepository.findByRestaurantIdAndVoteDate(restaurantId, voteDate);
+    }
+
 
     @Override
     public Long countVotes(int restaurantId, LocalDate voteDate) {
-        return voteRepository.countAllByRestaurantIdAndDate(restaurantId, voteDate);
+        return voteRepository.countAllByRestaurantIdAndVoteDate(restaurantId, voteDate);
     }
 
 }

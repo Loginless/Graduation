@@ -12,6 +12,8 @@ public class UserTestData {
     public static final int ADMIN_ID = AbstractBaseEntity.START_SEQ;
     public static final int USER_ID = AbstractBaseEntity.START_SEQ + 1;
     public static final int USER1_ID = AbstractBaseEntity.START_SEQ + 2;
+    public static final String USER1_EMAIL = "user1@yandex.ru";
+    public static final String USER1_FALSE_EMAIL = "dfdf@yandex.ru";
 
 
     public static final User USER = new User(USER_ID, "User", "user@yandex.ru", "password", Role.ROLE_USER);

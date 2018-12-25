@@ -14,7 +14,7 @@ import java.util.List;
 import static ua.com.pollapp.util.ValidationUtil.checkNotFoundWithId;
 
 @Service("menuService")
-public class MenuServiceImpl extends MenuService {
+public class MenuServiceImpl implements MenuService {
 
     private final MenuRepository menuRepository;
     private final RestaurantRepository restaurantRepository;

@@ -9,6 +9,7 @@ import ua.com.pollapp.util.exception.NotFoundException;
 
 import java.util.List;
 
+import static ua.com.pollapp.util.ValidationUtil.checkNotFound;
 import static ua.com.pollapp.util.ValidationUtil.checkNotFoundWithId;
 
 @Service("dishService")
@@ -51,7 +52,7 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public Dish findByDishName(String dishName) throws NotFoundException {
-        Assert.notNull(dishRepository.findByDishName(dishName).orElse(null), "dish mustn't be null");
-        return dishRepository.findByDishName(dishName).orElse(null);
+        Assert.notNull(dishName, "dish mustn't be null");
+        return checkNotFound(dishRepository.findByDishName(dishName), "dishName=" + dishName);
     }
 }

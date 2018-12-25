@@ -35,7 +35,7 @@ public class UserServiceTest extends AbstractServiceTest {
         User newUser = new User(null, "New", "new@gmail.com", "newPass", false, new Date(), Collections.singleton(Role.ROLE_USER));
         User created = userService.create(new User(newUser));
         newUser.setId(created.getId());
-        assertMatch(userService.getAll(), ADMIN, newUser, USER, USER1);
+        assertMatch(userService.findAll(), ADMIN, newUser, USER, USER1);
     }
 
     @Test
@@ -45,10 +45,20 @@ public class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    public void update() {
+        User updated = new User(USER);
+        updated.setName("UpdatedName");
+        updated.setEmail("test@gmail.com");
+        updated.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
+        userService.update(new User(updated));
+        assertMatch(userService.findById(USER_ID), updated);
+    }
+
+    @Test
     public void delete() {
         userService.delete(USER_ID);
         userService.delete(USER1_ID);
-        assertMatch(userService.getAll(), ADMIN);
+        assertMatch(userService.findAll(), ADMIN);
     }
 
     @Test
@@ -58,37 +68,33 @@ public class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void get() {
-        User user = userService.get(ADMIN_ID);
+    public void findById() {
+        User user = userService.findById(ADMIN_ID);
         assertMatch(user, ADMIN);
     }
 
     @Test
-    void getNotFound() throws Exception {
+    void findByIdNotFound() throws Exception {
         assertThrows(NotFoundException.class, () ->
-                userService.get(1));
+                userService.findById(1));
     }
 
     @Test
-    public void getByEmail() {
-        User user = userService.getByEmail("admin@gmail.com");
-        assertMatch(user, ADMIN);
-    }
-
-    @Test
-    public void update() {
-        User updated = new User(USER);
-        updated.setName("UpdatedName");
-        updated.setEmail("test@gmail.com");
-        updated.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
-        userService.update(new User(updated));
-        assertMatch(userService.get(USER_ID), updated);
-    }
-
-    @Test
-    void getAll() throws Exception {
-        List<User> all = userService.getAll();
+    void findAll() throws Exception {
+        List<User> all = userService.findAll();
         assertMatch(all, ADMIN, USER, USER1);
+    }
+
+    @Test
+    public void findByEmail() {
+        User user = userService.findByEmail(USER1_EMAIL);
+        assertMatch(user, USER1);
+    }
+
+    @Test
+    void findByEmailNotFound() throws Exception {
+        assertThrows(NotFoundException.class, () ->
+                userService.findByEmail(USER1_FALSE_EMAIL));
     }
 
 }
