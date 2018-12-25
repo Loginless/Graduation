@@ -13,7 +13,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ua.com.pollapp.testdata.UserTestData.*;
 
 
@@ -95,6 +97,14 @@ public class UserServiceTest extends AbstractServiceTest {
     void findByEmailNotFound() throws Exception {
         assertThrows(NotFoundException.class, () ->
                 userService.findByEmail(USER1_FALSE_EMAIL));
+    }
+
+    @Test
+    void enable() {
+        userService.enable(USER_ID, false);
+        assertFalse(userService.findById(USER_ID).isEnabled());
+        userService.enable(USER_ID, true);
+        assertTrue(userService.findById(USER_ID).isEnabled());
     }
 
 }

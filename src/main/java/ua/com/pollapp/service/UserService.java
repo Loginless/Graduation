@@ -19,4 +19,5 @@ public interface UserService {
 
     User findByEmail(String email) throws NotFoundException;
 
+    void enable(int id, boolean enabled);
 }

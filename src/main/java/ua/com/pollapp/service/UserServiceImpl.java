@@ -5,6 +5,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ua.com.pollapp.model.User;
 import ua.com.pollapp.repository.UserRepository;
@@ -62,5 +63,13 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String email) throws NotFoundException {
         Assert.notNull(email, "email must not be null");
         return checkNotFound(userRepository.findByEmail(email), "email=" + email);
+    }
+
+    @CacheEvict(value = "users", allEntries = true)
+    @Override
+    @Transactional
+    public void enable(int id, boolean enabled) {
+        User user = findById(id);
+        user.setEnabled(enabled);
     }
 }
