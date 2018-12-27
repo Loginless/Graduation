@@ -19,13 +19,13 @@ import static ua.com.pollapp.testdata.UserTestData.USER_ID;
 import static ua.com.pollapp.testdata.VotesTestData.*;
 
 
-public class VotesServiceTest extends AbstractServiceTest {
+class VotesServiceTest extends AbstractServiceTest {
 
     @Autowired
     VotesService votesService;
 
     @Test
-    public void create() {
+    void create() {
         Vote newVote = new Vote(USER, RESTAURANT1, LocalDate.of(2018, 12, 03));
         Vote created = votesService.save(USER_ID, RESTRAUNT_ID, LocalDateTime.of(2018, 12, 03, 10, 00, 00));
         newVote.setId(created.getId());
@@ -33,20 +33,20 @@ public class VotesServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void update() {
+    void update() {
         Vote updated = getUpdated();
         votesService.save(updated.getUser().getId(), updated.getRestaurant().getId(), LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 20, 11)));
         assertMatch(votesService.findById(VOTE6.getId()), updated);
     }
 
     @Test
-    public void findAll() {
+    void findAll() {
         List<Vote> all = votesService.findAll();
         assertMatch(all, VOTE1, VOTE2, VOTE3, VOTE4, VOTE5);
     }
 
     @Test
-    public void findById() {
+    void findById() {
         Vote vote = votesService.findById(VOTE1_ID);
         assertMatch(vote, VOTE1);
     }
@@ -58,25 +58,25 @@ public class VotesServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void findByDate() {
+    void findByDate() {
         List<Vote> votesByDate = votesService.findByDate(LocalDate.of(2018, 12, 01));
         assertMatch(votesByDate, VOTE1, VOTE2);
     }
 
     @Test
-    public void findByUserIdAndVoteDate() {
+    void findByUserIdAndVoteDate() {
         Vote vote = votesService.findByUserIdAndVoteDate(USER_ID, LocalDate.of(2018, 12, 01));
         assertMatch(vote, VOTE1);
     }
 
     @Test
-    public void findByRestaurantIdAndVoteDate() {
+    void findByRestaurantIdAndVoteDate() {
         List<Vote> votesByRestaurantIdAndVoteDate = votesService.findByRestaurantIdAndVoteDate(RESTRAUNT_ID, LocalDate.of(2018, 12, 02));
         assertMatch(votesByRestaurantIdAndVoteDate, VOTE5);
     }
 
     @Test
-    public void countVotesByRestaurant() {
+    void countVotesByRestaurant() {
         LocalDate testDate = LocalDate.of(2018, 12, 02);
         Long votingResult = votesService.countVotes(RESTRAUNT_ID + 1, testDate);
         Assertions.assertThat(votingResult).isEqualTo(2L);

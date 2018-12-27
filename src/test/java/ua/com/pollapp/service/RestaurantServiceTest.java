@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ua.com.pollapp.testdata.RestaurantTestData.*;
 
 
-public class RestaurantServiceTest extends AbstractServiceTest {
+class RestaurantServiceTest extends AbstractServiceTest {
 
     @Autowired
     RestaurantService restaurantService;
@@ -27,7 +27,7 @@ public class RestaurantServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void create() {
+    void create() {
         Restaurant newRestaurant = new Restaurant("CreateTest", "SomeAddress", "SomePhoneNumber");
         Restaurant created = restaurantService.create(newRestaurant);
         newRestaurant.setId(created.getId());
@@ -35,14 +35,14 @@ public class RestaurantServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void update() {
+    void update() {
         Restaurant updated = getUpdated();
         restaurantService.update(updated);
         assertMatch(restaurantService.findById(RESTRAUNT_ID), updated);
     }
 
     @Test
-    public void delete() {
+    void delete() {
         restaurantService.delete(RESTRAUNT_ID);
         assertMatch(restaurantService.findAll(), RESTAURANT2, RESTAURANT3);
     }
@@ -54,13 +54,13 @@ public class RestaurantServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void findAll() {
+    void findAll() {
         List<Restaurant> all = restaurantService.findAll();
         assertMatch(all, RESTAURANT1, RESTAURANT2, RESTAURANT3);
     }
 
     @Test
-    public void findById() {
+    void findById() {
         Restaurant actual = restaurantService.findById(RESTRAUNT_ID);
         assertMatch(actual, RESTAURANT1);
     }

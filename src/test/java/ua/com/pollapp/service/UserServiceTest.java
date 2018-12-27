@@ -13,13 +13,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static ua.com.pollapp.testdata.UserTestData.*;
 
 
-public class UserServiceTest extends AbstractServiceTest {
+class UserServiceTest extends AbstractServiceTest {
 
     @Autowired
     private UserService userService;
@@ -33,7 +31,7 @@ public class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void create() throws Exception {
+    void create() throws Exception {
         User newUser = new User(null, "New", "new@gmail.com", "newPass", false, new Date(), Collections.singleton(Role.ROLE_USER));
         User created = userService.create(new User(newUser));
         newUser.setId(created.getId());
@@ -47,7 +45,7 @@ public class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void update() {
+    void update() {
         User updated = new User(USER);
         updated.setName("UpdatedName");
         updated.setEmail("test@gmail.com");
@@ -57,7 +55,7 @@ public class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         userService.delete(USER_ID);
         userService.delete(USER1_ID);
         assertMatch(userService.findAll(), ADMIN);
@@ -70,7 +68,7 @@ public class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void findById() {
+    void findById() {
         User user = userService.findById(ADMIN_ID);
         assertMatch(user, ADMIN);
     }
@@ -88,7 +86,7 @@ public class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void findByEmail() {
+    void findByEmail() {
         User user = userService.findByEmail(USER1_EMAIL);
         assertMatch(user, USER1);
     }

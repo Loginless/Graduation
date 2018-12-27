@@ -15,13 +15,13 @@ import static ua.com.pollapp.testdata.RestaurantTestData.RESTAURANT1;
 import static ua.com.pollapp.testdata.RestaurantTestData.RESTRAUNT_ID;
 
 
-public class MenuServiceTest extends AbstractServiceTest {
+class MenuServiceTest extends AbstractServiceTest {
 
     @Autowired
     MenuService menuService;
 
     @Test
-    public void create() {
+    void create() {
         Menu newMenu = new Menu(RESTAURANT1, LocalDate.of(2018, 5, 22), DISH1, 333);
         Menu created = menuService.create(newMenu);
         newMenu.setId(created.getId());
@@ -30,14 +30,14 @@ public class MenuServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void update() {
+    void update() {
         Menu updated = getUpdated();
         menuService.update(updated);
         assertMatch(menuService.findById(MENU1_ID), updated);
     }
 
     @Test
-    public void delete() {
+    void delete() {
         menuService.delete(MENU1_ID);
         assertMatch(menuService.findAll(), MENU2, MENU3, MENU4, MENU5, MENU6, MENU7, MENU8, MENU9, MENU10,
                 MENU11, MENU12, MENU13, MENU14, MENU15, MENU16);
@@ -50,13 +50,13 @@ public class MenuServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void findAll() {
+    void findAll() {
         List<Menu> all = menuService.findAll();
         assertMatch(all, MENULIST);
     }
 
     @Test
-    public void findById() {
+    void findById() {
         Menu actual = menuService.findById(MENU1_ID);
         assertMatch(actual, MENU1);
     }
@@ -69,19 +69,19 @@ public class MenuServiceTest extends AbstractServiceTest {
 
 
     @Test
-    public void findByRestaurant() {
+    void findByRestaurant() {
         List<Menu> menuByRestaurant = menuService.findByRestaurant(RESTRAUNT_ID);
         assertMatch(menuByRestaurant, MENU1, MENU2, MENU3, MENU4, MENU5, MENU6);
     }
 
     @Test
-    public void findByDate() {
+    void findByDate() {
         List<Menu> menuByDate = menuService.findByDate(LocalDate.of(2018, 12, 01));
         assertMatch(menuByDate, MENU1, MENU2, MENU3, MENU7, MENU8, MENU9, MENU13, MENU14);
     }
 
     @Test
-    public void getTodayMenuByRestaurantAndDate() {
+    void getTodayMenuByRestaurantAndDate() {
         List<Menu> menuByDate = menuService.findByRestaurantAndDate(RESTRAUNT_ID, LocalDate.of(2018, 12, 01));
         assertMatch(menuByDate, MENU1, MENU2, MENU3);
     }

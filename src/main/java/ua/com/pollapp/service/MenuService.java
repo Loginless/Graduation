@@ -1,6 +1,5 @@
 package ua.com.pollapp.service;
 
-import ua.com.pollapp.model.Dish;
 import ua.com.pollapp.model.Menu;
 import ua.com.pollapp.util.exception.NotFoundException;
 

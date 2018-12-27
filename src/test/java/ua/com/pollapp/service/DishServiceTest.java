@@ -8,13 +8,13 @@ import ua.com.pollapp.util.exception.NotFoundException;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ua.com.pollapp.testdata.DishTestData.*;
 
-public class DishServiceTest extends AbstractServiceTest {
+class DishServiceTest extends AbstractServiceTest {
 
     @Autowired
     private DishService dishService;
 
     @Test
-    public void create() {
+    void create() {
         Dish newDish = new Dish("TestDish");
         Dish created = dishService.create(newDish);
         newDish.setId(created.getId());
@@ -22,14 +22,14 @@ public class DishServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void update() {
+    void update() {
         Dish updated = getUpdated();
         dishService.update(updated);
         assertMatch(dishService.findById(DISH1_ID), updated);
     }
 
     @Test
-    public void delete() {
+    void delete() {
         dishService.delete(DISH1_ID);
         assertMatch(dishService.findAll(), DISH2, DISH3, DISH4, DISH5, DISH6, DISH7, DISH8, DISH9, DISH10, DISH11);
     }
@@ -46,7 +46,7 @@ public class DishServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void findById() {
+    void findById() {
         Dish actual = dishService.findById(DISH1_ID);
         assertMatch(actual, DISH1);
     }
@@ -58,7 +58,7 @@ public class DishServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void findByDishName() {
+    void findByDishName() {
         Dish actual = dishService.findByDishName(DISH1_NAME);
         assertMatch(actual, DISH1);
     }

@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ua.com.pollapp.model.User;
 import ua.com.pollapp.repository.UserRepository;
+import ua.com.pollapp.to.UserTo;
+import ua.com.pollapp.util.UserUtil;
 import ua.com.pollapp.util.exception.NotFoundException;
 
 import java.util.List;
@@ -37,9 +39,17 @@ public class UserServiceImpl implements UserService {
 
     @CacheEvict(value = "users", allEntries = true)
     @Override
-    public void update(User user) throws NotFoundException {
+    public void update(User user) {
         Assert.notNull(user, "user must not be null");
         checkNotFoundWithId(userRepository.save(user), user.getId());
+    }
+
+    @CacheEvict(value = "users", allEntries = true)
+    @Transactional
+    @Override
+    public void update(UserTo userTo) {
+        User user = findById(userTo.getId());
+        userRepository.save(UserUtil.updateFromTo(user, userTo));
     }
 
     @CacheEvict(value = "users", allEntries = true)
