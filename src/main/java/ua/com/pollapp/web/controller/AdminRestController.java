@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ua.com.pollapp.model.User;
-import ua.com.pollapp.to.UserTo;
 
 import java.net.URI;
 import java.util.List;
@@ -49,8 +48,8 @@ public class AdminRestController extends AbstractUserController {
     @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestBody UserTo userTo, @PathVariable("id") int id) {
-        super.update(userTo, id);
+    public void update(@RequestBody User user, @PathVariable("id") int id) {
+        super.update(user, id);
     }
 
     @Override

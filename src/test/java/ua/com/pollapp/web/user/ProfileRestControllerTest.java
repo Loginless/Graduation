@@ -3,8 +3,9 @@ package ua.com.pollapp.web.user;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import ua.com.pollapp.TestUtil;
-import ua.com.pollapp.model.Role;
 import ua.com.pollapp.model.User;
+import ua.com.pollapp.to.UserTo;
+import ua.com.pollapp.util.UserUtil;
 import ua.com.pollapp.web.AbstractControllerTest;
 import ua.com.pollapp.web.json.JsonUtil;
 
@@ -36,12 +37,11 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testUpdate() throws Exception {
-        User updated = new User(USER_ID, "newName", "newemail@ya.ru", "newPassword", Role.ROLE_USER);
+        UserTo updatedTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword");
         mockMvc.perform(put(REST_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-
-        assertMatch(userService.findByEmail("newemail@ya.ru"), updated);
+        assertMatch(userService.findByEmail("newemail@ya.ru"), UserUtil.updateFromTo(new User(USER), updatedTo));
     }
 }
