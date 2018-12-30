@@ -1,11 +1,14 @@
 package ua.com.pollapp.testdata;
 
+import org.springframework.test.web.servlet.ResultMatcher;
 import ua.com.pollapp.model.Menu;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ua.com.pollapp.TestUtil.readFromJsonMvcResult;
+import static ua.com.pollapp.TestUtil.readListFromJsonMvcResult;
 import static ua.com.pollapp.model.AbstractBaseEntity.START_SEQ;
 import static ua.com.pollapp.testdata.DishTestData.*;
 import static ua.com.pollapp.testdata.RestaurantTestData.*;
@@ -50,6 +53,14 @@ public class MenuTestData {
 
     public static void assertMatch(Iterable<Menu> actual, Iterable<Menu> expected) {
         assertThat(actual).containsExactlyInAnyOrderElementsOf(expected).usingElementComparatorIgnoringFields("dishes", "restaurant");
+    }
+
+    public static ResultMatcher getMenuMatcher(Menu... expected) {
+        return result -> assertMatch(readListFromJsonMvcResult(result, Menu.class), List.of(expected));
+    }
+
+    public static ResultMatcher getMenuMatcher(Menu expected) {
+        return result -> assertMatch(readFromJsonMvcResult(result, Menu.class), expected);
     }
 
 }

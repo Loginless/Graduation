@@ -30,7 +30,7 @@ class DishRestControllerTest extends AbstractControllerTest {
         TestUtil.print(mockMvc.perform(get(REST_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(getUserMatcher(DISH1, DISH2, DISH3, DISH4, DISH5, DISH6, DISH7, DISH8, DISH9, DISH10, DISH11)));
+                .andExpect(getDishMatcher(DISH1, DISH2, DISH3, DISH4, DISH5, DISH6, DISH7, DISH8, DISH9, DISH10, DISH11)));
     }
 
     @Test
@@ -40,7 +40,7 @@ class DishRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(getUserMatcher(DISH1));
+                .andExpect(getDishMatcher(DISH1));
     }
 
     @Test
@@ -48,7 +48,7 @@ class DishRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(get(REST_URL + "by?name=" + DISH1.getDishName()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(getUserMatcher(DISH1));
+                .andExpect(getDishMatcher(DISH1));
     }
 
     @Test
@@ -74,8 +74,7 @@ class DishRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testUpdate() throws Exception {
-        Dish updated = new Dish(DISH1);
-        updated.setDishName("UpdatedName");
+        Dish updated = getUpdated();
         mockMvc.perform(put(REST_URL + DISH1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))

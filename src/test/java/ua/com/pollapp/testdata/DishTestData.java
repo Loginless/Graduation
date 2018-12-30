@@ -48,11 +48,11 @@ public class DishTestData {
         assertThat(actual).isEqualTo(expected);
     }
 
-    public static ResultMatcher getUserMatcher(Dish... expected) {
+    public static ResultMatcher getDishMatcher(Dish... expected) {
         return result -> assertMatch(readListFromJsonMvcResult(result, Dish.class), List.of(expected));
     }
 
-    public static ResultMatcher getUserMatcher(Dish expected) {
+    public static ResultMatcher getDishMatcher(Dish expected) {
         return result -> assertMatch(readFromJsonMvcResult(result, Dish.class), expected);
     }
 

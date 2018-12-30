@@ -34,8 +34,8 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     @EntityGraph(attributePaths = {"dish", "restaurant"})
     List<Menu> findAll(Sort sort);
 
-    @EntityGraph(attributePaths = {"dish", "restaurant"})
-    List<Menu> findByRestaurant(Restaurant restaurant);
+    @EntityGraph(attributePaths = {"dish"})
+    List<Menu> findByRestaurantId(int restaurantId);
 
     @EntityGraph(attributePaths = {"dish", "restaurant"})
     List<Menu> findByDate(LocalDate date);
