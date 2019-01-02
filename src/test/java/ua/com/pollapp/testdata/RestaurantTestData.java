@@ -1,11 +1,15 @@
 package ua.com.pollapp.testdata;
 
+import org.springframework.test.web.servlet.ResultMatcher;
 import ua.com.pollapp.model.AbstractBaseEntity;
 import ua.com.pollapp.model.Restaurant;
+import ua.com.pollapp.to.RestaurantTo;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ua.com.pollapp.TestUtil.readFromJsonMvcResult;
+import static ua.com.pollapp.TestUtil.readListFromJsonMvcResult;
 
 
 public class RestaurantTestData {
@@ -20,6 +24,10 @@ public class RestaurantTestData {
         return new Restaurant(RESTRAUNT_ID, "Updated Rest", "Updated address", "Updated PhoneNumber");
     }
 
+    public static final RestaurantTo RESTAURANT_TO_2 = new RestaurantTo(RESTAURANT2, 2L);
+    public static final RestaurantTo RESTAURANT_TO_3 = new RestaurantTo(RESTAURANT3, 0L);
+    public static final RestaurantTo RESTAURANT_TO_CURRENT_DATE = new RestaurantTo(RESTAURANT3, 1L);
+
 
     public static void assertMatch(Restaurant actual, Restaurant expected) {
         assertThat(actual).isEqualToIgnoringGivenFields(expected, "menu", "votes");
@@ -31,6 +39,30 @@ public class RestaurantTestData {
 
     public static void assertMatch(Iterable<Restaurant> actual, Iterable<Restaurant> expected) {
         assertThat(actual).usingElementComparatorIgnoringFields("menu", "votes").isEqualTo(expected);
+    }
+
+    public static ResultMatcher getRestaurantMatcher(Restaurant... expected) {
+        return result -> assertMatch(readListFromJsonMvcResult(result, Restaurant.class), List.of(expected));
+    }
+
+    public static ResultMatcher getRestaurantMatcher(Restaurant expected) {
+        return result -> assertMatch(readFromJsonMvcResult(result, Restaurant.class), expected);
+    }
+
+    public static void assertMatchTo(Iterable<RestaurantTo> actual, RestaurantTo... expected) {
+        assertMatchTo(actual, List.of(expected));
+    }
+
+    public static void assertMatchTo(Iterable<RestaurantTo> actual, Iterable<RestaurantTo> expected) {
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    public static ResultMatcher getToMatcher(RestaurantTo... expected) {
+        return getToMatcher(List.of(expected));
+    }
+
+    public static ResultMatcher getToMatcher(Iterable<RestaurantTo> expected) {
+        return result -> assertThat(readListFromJsonMvcResult(result, RestaurantTo.class)).isEqualTo(expected);
     }
 
 }

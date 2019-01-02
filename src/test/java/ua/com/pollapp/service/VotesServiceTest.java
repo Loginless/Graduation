@@ -29,20 +29,20 @@ class VotesServiceTest extends AbstractServiceTest {
         Vote newVote = new Vote(USER, RESTAURANT1, LocalDate.of(2018, 12, 03));
         Vote created = votesService.save(USER_ID, RESTRAUNT_ID, LocalDateTime.of(2018, 12, 03, 10, 00, 00));
         newVote.setId(created.getId());
-        assertMatch(votesService.findAll(), VOTE1, VOTE2, VOTE3, VOTE4, VOTE5, newVote);
+        assertMatch(votesService.findAll(), VOTE1, VOTE2, VOTE3, VOTE4, VOTE5, VOTE8, VOTE6, VOTE7, newVote);
     }
 
     @Test
     void update() {
         Vote updated = getUpdated();
         votesService.save(updated.getUser().getId(), updated.getRestaurant().getId(), LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 20, 11)));
-        assertMatch(votesService.findById(VOTE6.getId()), updated);
+        assertMatch(votesService.findById(VOTE8.getId()), updated);
     }
 
     @Test
     void findAll() {
         List<Vote> all = votesService.findAll();
-        assertMatch(all, VOTE1, VOTE2, VOTE3, VOTE4, VOTE5);
+        assertMatch(all, VOTE1, VOTE2, VOTE3, VOTE4, VOTE5, VOTE6, VOTE7);
     }
 
     @Test

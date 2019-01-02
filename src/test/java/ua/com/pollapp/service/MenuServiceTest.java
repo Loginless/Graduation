@@ -26,7 +26,7 @@ class MenuServiceTest extends AbstractServiceTest {
         Menu created = menuService.create(newMenu);
         newMenu.setId(created.getId());
         assertMatch(menuService.findAll(), newMenu, MENU1, MENU2, MENU3, MENU4, MENU5, MENU6, MENU7, MENU8, MENU9, MENU10,
-                MENU11, MENU12, MENU13, MENU14, MENU15, MENU16);
+                MENU11, MENU12, MENU13, MENU14, MENU15, MENU16, MENU17, MENU18);
     }
 
     @Test
@@ -40,7 +40,7 @@ class MenuServiceTest extends AbstractServiceTest {
     void delete() {
         menuService.delete(MENU1_ID);
         assertMatch(menuService.findAll(), MENU2, MENU3, MENU4, MENU5, MENU6, MENU7, MENU8, MENU9, MENU10,
-                MENU11, MENU12, MENU13, MENU14, MENU15, MENU16);
+                MENU11, MENU12, MENU13, MENU14, MENU15, MENU16, MENU17, MENU18);
     }
 
     @Test

@@ -1,6 +1,7 @@
 package ua.com.pollapp.web.controller;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,6 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.slf4j.LoggerFactory.getLogger;
 import static ua.com.pollapp.util.ValidationUtil.assureIdConsistent;
 import static ua.com.pollapp.util.ValidationUtil.checkNew;
 
@@ -24,7 +24,7 @@ import static ua.com.pollapp.util.ValidationUtil.checkNew;
 public class MenuRestController {
 
     public static final String REST_URL = "/rest/menu";
-    private static final Logger LOG = getLogger(Menu.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MenuRestController.class);
 
     @Autowired
     private MenuService menuService;

@@ -5,8 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import ua.com.pollapp.model.Restaurant;
+import ua.com.pollapp.to.RestaurantTo;
 import ua.com.pollapp.util.exception.NotFoundException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -71,4 +73,15 @@ class RestaurantServiceTest extends AbstractServiceTest {
                 restaurantService.findById(RESTRAUNT_FALSE_ID));
     }
 
+    @Test
+    void findAllRestaurantWithUpdatedMenu() {
+        List<Restaurant> all = restaurantService.findAllRestaurantWithUpdatedMenu(LocalDate.of(2018, 12, 03));
+        assertMatch(all, RESTAURANT2, RESTAURANT3);
+    }
+
+    @Test
+    void countVotesByMenuDate() {
+        List<RestaurantTo> all = restaurantService.countVotesByMenuDate(LocalDate.of(2018, 12, 03));
+        assertMatchTo(all, RESTAURANT_TO_2, RESTAURANT_TO_3);
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.pollapp.model.Restaurant;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,11 +26,20 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     int deleteById(@Param("id") int id);
 
     @Override
-    @EntityGraph(attributePaths = {"menu", "votes"})
+    @EntityGraph(attributePaths = {"menu", "votes"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Restaurant> findAll(Sort sort);
 
     @Override
-    @EntityGraph(attributePaths = {"menu", "votes"})
     Optional<Restaurant> findById(Integer restaurantId);
+
+    @Transactional
+    @Query("SELECT r FROM Restaurant r JOIN FETCH r.votes v")
+    List<Restaurant> findAllRestaurantWithVotes();
+
+    @Transactional
+    @Query("SELECT distinct r FROM Restaurant r LEFT JOIN r.menu m WHERE m.date=?1")
+    List<Restaurant> findAllRestaurantWithUpdatedMenu(LocalDate date);
+
+
 
 }

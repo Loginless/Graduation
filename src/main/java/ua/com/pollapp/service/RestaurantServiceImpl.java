@@ -6,19 +6,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ua.com.pollapp.model.Restaurant;
 import ua.com.pollapp.repository.RestaurantRepository;
+import ua.com.pollapp.repository.VoteRepository;
+import ua.com.pollapp.to.RestaurantTo;
 import ua.com.pollapp.util.exception.NotFoundException;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ua.com.pollapp.util.ValidationUtil.checkNotFoundWithId;
 
 @Service("restaurantService")
 public class RestaurantServiceImpl implements RestaurantService {
 
-    RestaurantRepository restaurantRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final VoteRepository voteRepository;
 
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository) {
+
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, VoteRepository voteRepository) {
         this.restaurantRepository = restaurantRepository;
+        this.voteRepository = voteRepository;
     }
 
     @CacheEvict(value = "restaurant", allEntries = true)
@@ -50,4 +57,28 @@ public class RestaurantServiceImpl implements RestaurantService {
     public Restaurant findById(int restaurantId) throws NotFoundException {
         return checkNotFoundWithId(restaurantRepository.findById(restaurantId).orElse(null), restaurantId);
     }
+
+    @Override
+    public List<Restaurant> findAllRestaurantWithUpdatedMenu(LocalDate menuDate) {
+        return restaurantRepository.findAllRestaurantWithUpdatedMenu(menuDate);
+    }
+
+    @Override
+    public List<RestaurantTo> countVotesByMenuDate(LocalDate menuDate) {
+        List<Restaurant> restaurants = findAllRestaurantWithUpdatedMenu(menuDate);
+        return restaurants
+                .stream()
+                .map(restaurant -> new RestaurantTo(restaurant, voteRepository.countAllByRestaurantIdAndVoteDate(restaurant.getId(), menuDate)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RestaurantTo> countVotesForToday() {
+        List<Restaurant> restaurants = findAllRestaurantWithUpdatedMenu(LocalDate.now());
+        return restaurants
+                .stream()
+                .map(restaurant -> new RestaurantTo(restaurant, voteRepository.countAllByRestaurantIdAndVoteDate(restaurant.getId(), LocalDate.now())))
+                .collect(Collectors.toList());
+    }
+
 }

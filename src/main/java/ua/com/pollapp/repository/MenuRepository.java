@@ -27,7 +27,7 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     int deleteById(@Param("id") int id);
 
     @Override
-    @EntityGraph(attributePaths = {"dish", "restaurant"})
+    @EntityGraph(attributePaths = {"dish"})
     Optional<Menu> findById(Integer menuId);
 
     @Override
