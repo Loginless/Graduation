@@ -27,20 +27,20 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     int deleteById(@Param("id") int id);
 
     @Override
-    @EntityGraph(attributePaths = {"dish"})
+    @EntityGraph(attributePaths = {"dish"}, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Menu> findById(Integer menuId);
 
     @Override
-    @EntityGraph(attributePaths = {"dish", "restaurant"})
+    @EntityGraph(attributePaths = {"dish"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Menu> findAll(Sort sort);
 
-    @EntityGraph(attributePaths = {"dish"})
+    @EntityGraph(attributePaths = {"dish"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Menu> findByRestaurantId(int restaurantId);
 
-    @EntityGraph(attributePaths = {"dish", "restaurant"})
+    @EntityGraph(attributePaths = {"dish", "restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Menu> findByDate(LocalDate date);
 
-    @EntityGraph(attributePaths = {"dish", "restaurant"})
+    @EntityGraph(attributePaths = {"dish"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Menu> findByRestaurantAndDate(Restaurant restaurant, LocalDate date);
 
 

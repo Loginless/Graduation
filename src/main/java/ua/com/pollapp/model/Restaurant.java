@@ -1,30 +1,35 @@
 package ua.com.pollapp.model;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cache;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
+
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 @Table(name = "restaurant", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "address"}, name = "restaurant_unique_restaurant_id_idx")})
 public class Restaurant extends AbstractNamedEntity {
 
-    @Column(name = "address", nullable = false, unique = false)
+    @Column(name = "address", nullable = false)
     @NotBlank
     @Size(max = 100)
     private String address;
 
-    @Column(name = "phone_number", nullable = false, unique = false)
+    @Column(name = "phone_number", nullable = false)
     @NotBlank
     @Size(max = 100)
     private String phoneNumber;
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", orphanRemoval = true)
     @OrderBy("date DESC")
     protected Set<Menu> menu;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", orphanRemoval = true)
     protected Set<Vote> votes;
 
     public Restaurant() {

@@ -25,20 +25,20 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     int delete(@Param("id") int id);
 
     @Override
-    @EntityGraph(attributePaths = {"user", "restaurant"})
+    @EntityGraph(attributePaths = {"user", "restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Vote> findAll();
 
     @Override
-    @EntityGraph(attributePaths = {"user", "restaurant"})
+    @EntityGraph(attributePaths = {"user", "restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Vote> findById(Integer integer);
 
-    @EntityGraph(attributePaths = {"user", "restaurant"})
+    @EntityGraph(attributePaths = {"user", "restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Vote> findByVoteDate(LocalDate date);
 
-    @EntityGraph(attributePaths = {"user", "restaurant"})
+    @EntityGraph(attributePaths = {"user", "restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Vote> findByUserIdAndVoteDate(int userId, LocalDate date);
 
-    @EntityGraph(attributePaths = {"user", "restaurant"})
+    @EntityGraph(attributePaths = {"user", "restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Vote> findByRestaurantIdAndVoteDate(int restaurantId, LocalDate date);
 
     Long countAllByRestaurantIdAndVoteDate(int restaurantId, LocalDate date);

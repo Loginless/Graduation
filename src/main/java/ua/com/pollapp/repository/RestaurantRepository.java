@@ -26,17 +26,19 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     int deleteById(@Param("id") int id);
 
     @Override
-    @EntityGraph(attributePaths = {"menu", "votes"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Restaurant> findAll(Sort sort);
 
     @Override
+    @EntityGraph(attributePaths = {"menu", "votes"}, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Restaurant> findById(Integer restaurantId);
 
     @Transactional
+    @EntityGraph(attributePaths = {"votes"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT r FROM Restaurant r JOIN FETCH r.votes v")
     List<Restaurant> findAllRestaurantWithVotes();
 
     @Transactional
+    @EntityGraph(attributePaths = {"menu", "votes"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT distinct r FROM Restaurant r LEFT JOIN r.menu m WHERE m.date=?1")
     List<Restaurant> findAllRestaurantWithUpdatedMenu(LocalDate date);
 
