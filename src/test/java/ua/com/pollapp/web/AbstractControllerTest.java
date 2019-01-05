@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import ua.com.pollapp.service.UserService;
+import ua.com.pollapp.util.JpaUtil;
 
 import javax.annotation.PostConstruct;
 
@@ -32,10 +33,13 @@ abstract public class AbstractControllerTest {
     protected MockMvc mockMvc;
 
     @Autowired
-    private CacheManager cacheManager;
+    protected CacheManager cacheManager;
 
     @Autowired
     protected UserService userService;
+
+    @Autowired
+    private JpaUtil jpaUtil;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -52,5 +56,8 @@ abstract public class AbstractControllerTest {
     void setUp() {
         cacheManager.getCache("users").clear();
         cacheManager.getCache("restaurant").clear();
+        jpaUtil.clear2ndLevelHibernateCache();
     }
+
+
 }

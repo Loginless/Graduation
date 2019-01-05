@@ -1,5 +1,6 @@
 package ua.com.pollapp.service;
 
+import org.springframework.cache.annotation.CacheEvict;
 import ua.com.pollapp.model.User;
 import ua.com.pollapp.to.UserTo;
 import ua.com.pollapp.util.exception.NotFoundException;
@@ -23,4 +24,5 @@ public interface UserService {
     User findByEmail(String email) throws NotFoundException;
 
     void enable(int id, boolean enabled);
+
 }

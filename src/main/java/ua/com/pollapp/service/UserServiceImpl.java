@@ -10,13 +10,14 @@ import org.springframework.util.Assert;
 import ua.com.pollapp.model.User;
 import ua.com.pollapp.repository.UserRepository;
 import ua.com.pollapp.to.UserTo;
-import ua.com.pollapp.util.UserUtil;
 import ua.com.pollapp.util.exception.NotFoundException;
 
 import java.util.List;
 
 import static ua.com.pollapp.util.ValidationUtil.checkNotFound;
 import static ua.com.pollapp.util.ValidationUtil.checkNotFoundWithId;
+import static ua.com.pollapp.util.UserUtil.*;
+
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
@@ -44,12 +45,11 @@ public class UserServiceImpl implements UserService {
         checkNotFoundWithId(userRepository.save(user), user.getId());
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     @Transactional
     @Override
     public void update(UserTo userTo) {
         User user = findById(userTo.getId());
-        userRepository.save(UserUtil.updateFromTo(user, userTo));
+        userRepository.save(updateFromTo(user, userTo));
     }
 
     @CacheEvict(value = "users", allEntries = true)
@@ -58,15 +58,16 @@ public class UserServiceImpl implements UserService {
         checkNotFoundWithId(userRepository.delete(userId) != 0, userId);
     }
 
-    @Override
-    public User findById(int userId) throws NotFoundException {
-        return checkNotFoundWithId(userRepository.findById(userId).orElse(null), userId);
-    }
-
     @Cacheable("users")
     @Override
     public List<User> findAll() {
         return userRepository.findAll(SORT_NAME_EMAIL);
+    }
+
+    @Cacheable("users")
+    @Override
+    public User findById(int userId) throws NotFoundException {
+        return checkNotFoundWithId(userRepository.findById(userId).orElse(null), userId);
     }
 
     @Override
@@ -82,4 +83,5 @@ public class UserServiceImpl implements UserService {
         User user = findById(id);
         user.setEnabled(enabled);
     }
+
 }

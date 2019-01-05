@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ua.com.pollapp.testdata.DishTestData.DISH1;
 import static ua.com.pollapp.testdata.MenuTestData.*;
 import static ua.com.pollapp.testdata.RestaurantTestData.RESTAURANT1;
-import static ua.com.pollapp.testdata.RestaurantTestData.RESTRAUNT_ID;
+import static ua.com.pollapp.testdata.RestaurantTestData.RESTAURANT_ID;
 
 
 class MenuServiceTest extends AbstractServiceTest {
@@ -26,7 +26,7 @@ class MenuServiceTest extends AbstractServiceTest {
         Menu created = menuService.create(newMenu);
         newMenu.setId(created.getId());
         assertMatch(menuService.findAll(), newMenu, MENU1, MENU2, MENU3, MENU4, MENU5, MENU6, MENU7, MENU8, MENU9, MENU10,
-                MENU11, MENU12, MENU13, MENU14, MENU15, MENU16, MENU17, MENU18);
+                MENU11, MENU12, MENU13, MENU14, MENU15, MENU16, MENU17, MENU18, MENU19);
     }
 
     @Test
@@ -40,7 +40,7 @@ class MenuServiceTest extends AbstractServiceTest {
     void delete() {
         menuService.delete(MENU1_ID);
         assertMatch(menuService.findAll(), MENU2, MENU3, MENU4, MENU5, MENU6, MENU7, MENU8, MENU9, MENU10,
-                MENU11, MENU12, MENU13, MENU14, MENU15, MENU16, MENU17, MENU18);
+                MENU11, MENU12, MENU13, MENU14, MENU15, MENU16, MENU17, MENU18, MENU19);
     }
 
     @Test
@@ -70,7 +70,7 @@ class MenuServiceTest extends AbstractServiceTest {
 
     @Test
     void findByRestaurant() {
-        List<Menu> menuByRestaurant = menuService.findByRestaurant(RESTRAUNT_ID);
+        List<Menu> menuByRestaurant = menuService.findByRestaurant(RESTAURANT_ID);
         assertMatch(menuByRestaurant, MENU1, MENU2, MENU3, MENU4, MENU5, MENU6);
     }
 
@@ -82,7 +82,7 @@ class MenuServiceTest extends AbstractServiceTest {
 
     @Test
     void getTodayMenuByRestaurantAndDate() {
-        List<Menu> menuByDate = menuService.findByRestaurantAndDate(RESTRAUNT_ID, LocalDate.of(2018, 12, 01));
+        List<Menu> menuByDate = menuService.findByRestaurantAndDate(RESTAURANT_ID, LocalDate.of(2018, 12, 01));
         assertMatch(menuByDate, MENU1, MENU2, MENU3);
     }
 

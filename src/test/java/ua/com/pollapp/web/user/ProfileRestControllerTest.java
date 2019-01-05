@@ -1,5 +1,6 @@
 package ua.com.pollapp.web.user;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import ua.com.pollapp.TestUtil;
@@ -18,13 +19,18 @@ import static ua.com.pollapp.web.controller.ProfileRestController.REST_URL;
 
 class ProfileRestControllerTest extends AbstractControllerTest {
 
+    @BeforeEach
+    void setUp() {
+        cacheManager.getCache("users").clear();
+    }
+
     @Test
     void testGet() throws Exception {
         TestUtil.print(
                 mockMvc.perform(get(REST_URL))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(getUserMatcher(USER))
+                        .andExpect(getUserMatcher(USER1))
         );
     }
 
@@ -32,7 +38,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     void testDelete() throws Exception {
         mockMvc.perform(delete(REST_URL))
                 .andExpect(status().isNoContent());
-        assertMatch(userService.findAll(), ADMIN, USER1);
+        assertMatch(userService.findAll(), ADMIN, USER2);
     }
 
     @Test
@@ -42,6 +48,6 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertMatch(userService.findByEmail("newemail@ya.ru"), UserUtil.updateFromTo(new User(USER), updatedTo));
+        assertMatch(userService.findByEmail("newemail@ya.ru"), UserUtil.updateFromTo(new User(USER1), updatedTo));
     }
 }

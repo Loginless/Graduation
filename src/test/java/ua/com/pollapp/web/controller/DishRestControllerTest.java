@@ -24,7 +24,6 @@ class DishRestControllerTest extends AbstractControllerTest {
     @Autowired
     protected DishService dishService;
 
-
     @Test
     void testGetAll() throws Exception {
         TestUtil.print(mockMvc.perform(get(REST_URL))

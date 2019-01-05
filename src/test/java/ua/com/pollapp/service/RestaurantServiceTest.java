@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import ua.com.pollapp.model.Restaurant;
 import ua.com.pollapp.to.RestaurantTo;
+import ua.com.pollapp.util.JpaUtil;
 import ua.com.pollapp.util.exception.NotFoundException;
 
 import java.time.LocalDate;
@@ -23,9 +24,14 @@ class RestaurantServiceTest extends AbstractServiceTest {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private JpaUtil jpaUtil;
+
     @BeforeEach
     void setUp() throws Exception {
         cacheManager.getCache("restaurant").clear();
+        jpaUtil.clear2ndLevelHibernateCache();
+
     }
 
     @Test
@@ -40,19 +46,19 @@ class RestaurantServiceTest extends AbstractServiceTest {
     void update() {
         Restaurant updated = getUpdated();
         restaurantService.update(updated);
-        assertMatch(restaurantService.findById(RESTRAUNT_ID), updated);
+        assertMatch(restaurantService.findById(RESTAURANT_ID), updated);
     }
 
     @Test
     void delete() {
-        restaurantService.delete(RESTRAUNT_ID);
+        restaurantService.delete(RESTAURANT_ID);
         assertMatch(restaurantService.findAll(), RESTAURANT2, RESTAURANT3);
     }
 
     @Test
     void deleteNotFound() throws Exception {
         assertThrows(NotFoundException.class, () ->
-                restaurantService.delete(RESTRAUNT_FALSE_ID));
+                restaurantService.delete(RESTAURANT_FALSE_ID));
     }
 
     @Test
@@ -63,14 +69,14 @@ class RestaurantServiceTest extends AbstractServiceTest {
 
     @Test
     void findById() {
-        Restaurant actual = restaurantService.findById(RESTRAUNT_ID);
+        Restaurant actual = restaurantService.findById(RESTAURANT_ID);
         assertMatch(actual, RESTAURANT1);
     }
 
     @Test
     void findByIdNotFound() throws Exception {
         assertThrows(NotFoundException.class, () ->
-                restaurantService.findById(RESTRAUNT_FALSE_ID));
+                restaurantService.findById(RESTAURANT_FALSE_ID));
     }
 
     @Test
@@ -83,5 +89,11 @@ class RestaurantServiceTest extends AbstractServiceTest {
     void countVotesByMenuDate() {
         List<RestaurantTo> all = restaurantService.countVotesByMenuDate(LocalDate.of(2018, 12, 03));
         assertMatchTo(all, RESTAURANT_TO_2, RESTAURANT_TO_3);
+    }
+
+    @Test
+    void findAllRestaurantWithVotes() {
+        List<Restaurant> all = restaurantService.findAllRestaurantWithVotes();
+        assertMatch(all, RESTAURANT1, RESTAURANT2, RESTAURANT3);
     }
 }

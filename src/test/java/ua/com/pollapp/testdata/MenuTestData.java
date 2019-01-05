@@ -36,11 +36,14 @@ public class MenuTestData {
     public static final Menu MENU16 = new Menu(MENU1_ID + 15, RESTAURANT3, LocalDate.of(2018, 12, 02), DISH11, 134);
     public static final Menu MENU17 = new Menu(MENU1_ID + 16, RESTAURANT3, LocalDate.of(2018, 12, 03), DISH5, 333);
     public static final Menu MENU18 = new Menu(MENU1_ID + 17, RESTAURANT2, LocalDate.of(2018, 12, 03), DISH11, 444);
+    public static final Menu MENU19 = new Menu(MENU1_ID + 18, RESTAURANT3, LocalDate.now(), DISH10, 333);
 
     public static final List<Menu> MENULIST = List.of(MENU1, MENU2, MENU3, MENU4, MENU5, MENU6, MENU7, MENU8, MENU9, MENU10,
-            MENU11, MENU12, MENU13, MENU14, MENU15, MENU16, MENU17, MENU18);
+            MENU11, MENU12, MENU13, MENU14, MENU15, MENU16, MENU17, MENU18, MENU19);
 
     public static final Menu MENU_Today = new Menu(MENU1_ID + 18, RESTAURANT2, LocalDate.now(), DISH11, 444);
+
+    public static Menu getCreated  = new Menu(RESTAURANT1, LocalDate.of(2018, 12, 30), DISH1, 234);
 
 
     public static Menu getUpdated() {

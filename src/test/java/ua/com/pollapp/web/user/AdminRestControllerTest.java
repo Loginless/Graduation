@@ -1,5 +1,6 @@
 package ua.com.pollapp.web.user;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -23,6 +24,11 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = AdminRestController.REST_URL + '/';
 
+    @BeforeEach
+    void setUp() {
+        cacheManager.getCache("users").clear();
+    }
+
     @Test
     void testGet() throws Exception {
         mockMvc.perform(get(REST_URL + ADMIN_ID))
@@ -35,30 +41,30 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGetByEmail() throws Exception {
-        mockMvc.perform(get(REST_URL + "by?email=" + USER.getEmail()))
+        mockMvc.perform(get(REST_URL + "by?email=" + USER1.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(getUserMatcher(USER));
+                .andExpect(getUserMatcher(USER1));
     }
 
     @Test
     void testDelete() throws Exception {
-        mockMvc.perform(delete(REST_URL + USER_ID))
+        mockMvc.perform(delete(REST_URL + USER1_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertMatch(userService.findAll(), ADMIN, USER1);
+        assertMatch(userService.findAll(), ADMIN, USER2);
     }
 
     @Test
     void testUpdate() throws Exception {
-        User updated = new User(USER);
+        User updated = new User(USER1);
         updated.setName("UpdatedName");
         updated.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
-        mockMvc.perform(put(REST_URL + USER_ID)
+        mockMvc.perform(put(REST_URL + USER1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
-        assertMatch(userService.findById(USER_ID), updated);
+        assertMatch(userService.findById(USER1_ID), updated);
     }
 
     @Test
@@ -71,7 +77,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
         User returned = TestUtil.readFromJsonResultActions(action, User.class);
         expected.setId(returned.getId());
         assertMatch(returned, expected);
-        assertMatch(userService.findAll(), ADMIN, expected, USER, USER1);
+        assertMatch(userService.findAll(), ADMIN, expected, USER1, USER2);
     }
 
     @Test
@@ -79,6 +85,6 @@ class AdminRestControllerTest extends AbstractControllerTest {
         TestUtil.print(mockMvc.perform(get(REST_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(getUserMatcher(ADMIN, USER, USER1)));
+                .andExpect(getUserMatcher(ADMIN, USER1, USER2)));
     }
 }

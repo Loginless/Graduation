@@ -1,5 +1,6 @@
 package ua.com.pollapp.web.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -10,13 +11,10 @@ import ua.com.pollapp.service.RestaurantService;
 import ua.com.pollapp.web.AbstractControllerTest;
 import ua.com.pollapp.web.json.JsonUtil;
 
-import java.time.LocalDate;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import static ua.com.pollapp.testdata.RestaurantTestData.*;
 
 public class RestaurantRestControllerTest extends AbstractControllerTest {
@@ -26,9 +24,15 @@ public class RestaurantRestControllerTest extends AbstractControllerTest {
     @Autowired
     protected RestaurantService restaurantService;
 
+
+    @BeforeEach
+    void setUp() {
+        cacheManager.getCache("restaurant").clear();
+    }
+
     @Test
     void testGet() throws Exception {
-        mockMvc.perform(get(REST_URL + RESTRAUNT_ID))
+        mockMvc.perform(get(REST_URL + RESTAURANT_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472
@@ -67,7 +71,7 @@ public class RestaurantRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testDelete() throws Exception {
-        mockMvc.perform(delete(REST_URL + RESTRAUNT_ID))
+        mockMvc.perform(delete(REST_URL + RESTAURANT_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(restaurantService.findAll(), RESTAURANT2, RESTAURANT3);
@@ -76,11 +80,11 @@ public class RestaurantRestControllerTest extends AbstractControllerTest {
     @Test
     void testUpdate() throws Exception {
         Restaurant updated = getUpdated();
-        mockMvc.perform(put(REST_URL + RESTRAUNT_ID)
+        mockMvc.perform(put(REST_URL + RESTAURANT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
-        assertMatch(restaurantService.findById(RESTRAUNT_ID), updated);
+        assertMatch(restaurantService.findById(RESTAURANT_ID), updated);
     }
 
 

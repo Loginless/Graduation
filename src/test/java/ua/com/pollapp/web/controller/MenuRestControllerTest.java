@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ua.com.pollapp.testdata.DishTestData.DISH1;
 import static ua.com.pollapp.testdata.MenuTestData.*;
 import static ua.com.pollapp.testdata.RestaurantTestData.RESTAURANT1;
-import static ua.com.pollapp.testdata.RestaurantTestData.RESTRAUNT_ID;
+import static ua.com.pollapp.testdata.RestaurantTestData.RESTAURANT_ID;
 
 
 public class MenuRestControllerTest extends AbstractControllerTest {
@@ -35,7 +35,7 @@ public class MenuRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(getMenuMatcher(MENU1, MENU2, MENU3, MENU4, MENU5, MENU6, MENU7, MENU8, MENU9, MENU10,
-                        MENU11, MENU12, MENU13, MENU14, MENU15, MENU16)));
+                        MENU11, MENU12, MENU13, MENU14, MENU15, MENU16, MENU17, MENU18, MENU19)));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class MenuRestControllerTest extends AbstractControllerTest {
     void testGetByRestaurantIdAndDate() throws Exception {
         mockMvc.perform(get(REST_URL + "byIdDate?")
                 .param("date", "2018-12-02")
-                .param("restaurantId", "" + RESTRAUNT_ID))
+                .param("restaurantId", "" + RESTAURANT_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472
@@ -77,21 +77,19 @@ public class MenuRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(menuService.findAll(), MENU2, MENU3, MENU4, MENU5, MENU6, MENU7, MENU8, MENU9, MENU10,
-                MENU11, MENU12, MENU13, MENU14, MENU15, MENU16);
+                MENU11, MENU12, MENU13, MENU14, MENU15, MENU16, MENU17, MENU18, MENU19);
     }
 
     @Test
     void testCreate() throws Exception {
-        Menu expected = new Menu(RESTAURANT1, LocalDate.of(2018, 12, 30), DISH1, 234);
+        Menu created = getCreated;
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(expected)))
+                .content(JsonUtil.writeValue(created)))
                 .andExpect(status().isCreated());
         Menu returned = TestUtil.readFromJsonResultActions(action, Menu.class);
-        expected.setId(returned.getId());
-        assertMatch(returned, expected);
-        assertMatch(menuService.findAll(), MENU1, MENU2, MENU3, MENU4, MENU5, MENU6, MENU7, MENU8, MENU9, MENU10,
-                MENU11, MENU12, MENU13, MENU14, MENU15, MENU16, expected);
+        created.setId(returned.getId());
+        assertMatch(returned, created);
     }
 
     @Test

@@ -42,6 +42,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         checkNotFoundWithId(restaurantRepository.save(restaurant), restaurant.getId());
     }
 
+    @CacheEvict(value = "restaurant", allEntries = true)
     @Override
     public void delete(int restaurantId) throws NotFoundException {
         checkNotFoundWithId(restaurantRepository.deleteById(restaurantId) != 0, restaurantId);
@@ -53,11 +54,18 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantRepository.findAll();
     }
 
+    @Cacheable("restaurant")
     @Override
     public Restaurant findById(int restaurantId) throws NotFoundException {
         return checkNotFoundWithId(restaurantRepository.findById(restaurantId).orElse(null), restaurantId);
     }
 
+    @Override
+    public List<Restaurant> findAllRestaurantWithVotes() {
+        return restaurantRepository.findAllRestaurantWithVotes();
+    }
+
+    @Cacheable("restaurant")
     @Override
     public List<Restaurant> findAllRestaurantWithUpdatedMenu(LocalDate menuDate) {
         return restaurantRepository.findAllRestaurantWithUpdatedMenu(menuDate);

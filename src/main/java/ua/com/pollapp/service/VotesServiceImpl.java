@@ -101,7 +101,6 @@ public class VotesServiceImpl implements VotesService {
         return voteRepository.findByRestaurantIdAndVoteDate(restaurantId, voteDate);
     }
 
-
     @Override
     public Long countVotes(int restaurantId, LocalDate voteDate) {
         return voteRepository.countAllByRestaurantIdAndVoteDate(restaurantId, voteDate);

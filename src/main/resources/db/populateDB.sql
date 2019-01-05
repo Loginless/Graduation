@@ -9,8 +9,8 @@ RESTART WITH 100000;
 
 INSERT INTO users (name, email, password) VALUES
   ('Admin', 'admin@gmail.com', 'admin'),
-  ('User', 'user@yandex.ru', 'password'),
-  ('User1', 'user1@yandex.ru', 'password1');
+  ('User_1', 'user1@yandex.ru', 'password1'),
+  ('User_2', 'user2@yandex.ru', 'password2');
 
 INSERT INTO user_roles (role, user_id) VALUES
   ('ROLE_ADMIN', 100000),

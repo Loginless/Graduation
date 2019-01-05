@@ -18,17 +18,17 @@ public class DishTestData {
     public static final String DISH1_FALSE_NAME = "Antricot";
 
 
-    public static final Dish DISH1 = new Dish(100006, "Steak");
-    public static final Dish DISH2 = new Dish(100007, "Fish");
-    public static final Dish DISH3 = new Dish(100008, "Borsh");
-    public static final Dish DISH4 = new Dish(100009, "Potato");
-    public static final Dish DISH5 = new Dish(100010, "Salad");
-    public static final Dish DISH6 = new Dish(100011, "Juice");
-    public static final Dish DISH7 = new Dish(100012, "Ramen");
-    public static final Dish DISH8 = new Dish(100013, "Noodles");
-    public static final Dish DISH9 = new Dish(100014, "Rice");
-    public static final Dish DISH10 = new Dish(100015, "Soup");
-    public static final Dish DISH11 = new Dish(100016, "Chicken with Potato");
+    public static final Dish DISH1 = new Dish(DISH1_ID, "Steak");
+    public static final Dish DISH2 = new Dish(DISH1_ID + 1, "Fish");
+    public static final Dish DISH3 = new Dish(DISH1_ID + 2, "Borsh");
+    public static final Dish DISH4 = new Dish(DISH1_ID + 3, "Potato");
+    public static final Dish DISH5 = new Dish(DISH1_ID + 4, "Salad");
+    public static final Dish DISH6 = new Dish(DISH1_ID + 5, "Juice");
+    public static final Dish DISH7 = new Dish(DISH1_ID + 6, "Ramen");
+    public static final Dish DISH8 = new Dish(DISH1_ID + 7, "Noodles");
+    public static final Dish DISH9 = new Dish(DISH1_ID + 8, "Rice");
+    public static final Dish DISH10 = new Dish(DISH1_ID + 9, "Soup");
+    public static final Dish DISH11 = new Dish(DISH1_ID + 10, "Chicken with Potato");
 
     public static Dish getUpdated() {
         return new Dish(DISH1_ID, "Обновленное блюда");
