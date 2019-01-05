@@ -64,9 +64,9 @@ public class MenuRestController {
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") int id) {
-        LOG.info("delete {}", id);
-        menuService.delete(id);
+    public void delete(@PathVariable("id") int menuId) {
+        LOG.info("delete {}", menuId);
+        menuService.delete(menuId);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -82,9 +82,9 @@ public class MenuRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Menu menu, @PathVariable("id") int id) {
-        LOG.info("update {} with id={}", menu, id);
-        assureIdConsistent(menu, id);
+    public void update(@RequestBody Menu menu, @PathVariable("id") int menuId) {
+        LOG.info("update {} with id={}", menu, menuId);
+        assureIdConsistent(menu, menuId);
         menuService.update(menu);
     }
 

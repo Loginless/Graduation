@@ -35,9 +35,9 @@ public class DishRestController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Dish get(@PathVariable("id") int id) {
-        LOG.info("get {}", id);
-        return dishService.findById(id);
+    public Dish get(@PathVariable("id") int dishId) {
+        LOG.info("get {}", dishId);
+        return dishService.findById(dishId);
     }
 
     @GetMapping(value = "/by", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -48,9 +48,9 @@ public class DishRestController {
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") int id) {
-        LOG.info("delete {}", id);
-        dishService.delete(id);
+    public void delete(@PathVariable("id") int dishId) {
+        LOG.info("delete {}", dishId);
+        dishService.delete(dishId);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -67,9 +67,9 @@ public class DishRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Dish dish, @PathVariable("id") int id) {
-        LOG.info("update {} with id={}", dish, id);
-        assureIdConsistent(dish, id);
+    public void update(@RequestBody Dish dish, @PathVariable("id") int dishId) {
+        LOG.info("update {} with id={}", dish, dishId);
+        assureIdConsistent(dish, dishId);
         dishService.update(dish);
     }
 }

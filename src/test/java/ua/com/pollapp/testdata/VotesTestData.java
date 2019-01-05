@@ -1,5 +1,6 @@
 package ua.com.pollapp.testdata;
 
+import org.springframework.test.web.servlet.ResultMatcher;
 import ua.com.pollapp.model.AbstractBaseEntity;
 import ua.com.pollapp.model.Vote;
 
@@ -7,6 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ua.com.pollapp.TestUtil.readFromJsonMvcResult;
+import static ua.com.pollapp.TestUtil.readListFromJsonMvcResult;
 import static ua.com.pollapp.testdata.RestaurantTestData.*;
 import static ua.com.pollapp.testdata.UserTestData.*;
 
@@ -29,6 +32,9 @@ public class VotesTestData {
         return new Vote(VOTE8.getId(), USER1, RESTAURANT3, LocalDate.now());
     }
 
+    public static Vote getCreated  = new Vote(VOTE1_ID + 8, USER2, RESTAURANT2, LocalDate.of(2018, 12, 03));
+
+
     public static void assertMatch(Vote actual, Vote expected) {
         assertThat(actual).isEqualTo(expected);
     }
@@ -39,6 +45,14 @@ public class VotesTestData {
 
     public static void assertMatch(Iterable<Vote> actual, Iterable<Vote> expected) {
         assertThat(actual).isEqualTo(expected);
+    }
+
+    public static ResultMatcher getVoteMatcher(Vote... expected) {
+        return result -> assertMatch(readListFromJsonMvcResult(result, Vote.class), List.of(expected));
+    }
+
+    public static ResultMatcher getVoteMatcher(Vote expected) {
+        return result -> assertMatch(readFromJsonMvcResult(result, Vote.class), expected);
     }
 
 }

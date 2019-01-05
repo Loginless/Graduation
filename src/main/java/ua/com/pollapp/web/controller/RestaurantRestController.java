@@ -68,10 +68,10 @@ public class RestaurantRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Restaurant menu, @PathVariable("id") int id) {
-        LOG.info("update {} with id={}", menu, id);
-        assureIdConsistent(menu, id);
-        restaurantService.update(menu);
+    public void update(@RequestBody Restaurant restaurant, @PathVariable("id") int id) {
+        LOG.info("update {} with id={}", restaurant, id);
+        assureIdConsistent(restaurant, id);
+        restaurantService.update(restaurant);
     }
 
 
