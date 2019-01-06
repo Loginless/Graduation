@@ -14,6 +14,8 @@ import ua.com.pollapp.util.JpaUtil;
 
 import javax.annotation.PostConstruct;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+
 @SpringJUnitWebConfig(locations = {
         "classpath:spring/spring-app.xml",
         "classpath:spring/spring-mvc.xml",
@@ -49,6 +51,7 @@ abstract public class AbstractControllerTest {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
                 .addFilter(CHARACTER_ENCODING_FILTER)
+                .apply(springSecurity())
                 .build();
     }
 

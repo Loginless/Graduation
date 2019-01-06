@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ua.com.pollapp.model.Restaurant;
@@ -48,6 +49,7 @@ public class RestaurantRestController {
         return restaurantService.countVotesForToday();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@RequestBody Restaurant restaurant) {
         LOG.info("create {}", restaurant);
@@ -59,6 +61,7 @@ public class RestaurantRestController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") int id) {
@@ -66,6 +69,7 @@ public class RestaurantRestController {
         restaurantService.delete(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@RequestBody Restaurant restaurant, @PathVariable("id") int id) {

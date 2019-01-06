@@ -14,8 +14,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ua.com.pollapp.TestUtil.userHttpBasic;
 import static ua.com.pollapp.testdata.UserTestData.*;
 import static ua.com.pollapp.web.controller.ProfileRestController.REST_URL;
+
 
 class ProfileRestControllerTest extends AbstractControllerTest {
 
@@ -27,7 +29,8 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     @Test
     void testGet() throws Exception {
         TestUtil.print(
-                mockMvc.perform(get(REST_URL))
+                mockMvc.perform(get(REST_URL)
+                        .with(userHttpBasic(USER1)))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                         .andExpect(getUserMatcher(USER1))
@@ -35,8 +38,15 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void testGetUnAuth() throws Exception {
+        mockMvc.perform(get(REST_URL))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void testDelete() throws Exception {
-        mockMvc.perform(delete(REST_URL))
+        mockMvc.perform(delete(REST_URL)
+                .with(userHttpBasic(USER1)))
                 .andExpect(status().isNoContent());
         assertMatch(userService.findAll(), ADMIN, USER2);
     }
@@ -45,6 +55,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     void testUpdate() throws Exception {
         UserTo updatedTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword");
         mockMvc.perform(put(REST_URL).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(USER1))
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
                 .andExpect(status().isNoContent());

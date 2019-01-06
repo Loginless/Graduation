@@ -1,19 +1,33 @@
 package ua.com.pollapp.util;
 
-import ua.com.pollapp.model.AbstractBaseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import ua.com.pollapp.AuthorizedUser;
+
+import static java.util.Objects.requireNonNull;
 
 public class SecurityUtil {
 
-    private static int id = AbstractBaseEntity.START_SEQ;
+    public static AuthorizedUser safeGet() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            return null;
+        }
+        Object principal = auth.getPrincipal();
+        return (principal instanceof AuthorizedUser) ? (AuthorizedUser) principal : null;
+    }
+
+    public static AuthorizedUser get() {
+        AuthorizedUser user = safeGet();
+        requireNonNull(user, "No authorized user found");
+        return user;
+    }
 
     private SecurityUtil() {
     }
 
     public static int authUserId() {
-        return id + 1;
+        return get().getUserTo().getId();
     }
 
-    public static void setAuthUserId(int id) {
-        SecurityUtil.id = id;
-    }
 }

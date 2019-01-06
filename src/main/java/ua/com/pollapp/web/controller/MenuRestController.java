@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ua.com.pollapp.model.Menu;
@@ -61,7 +62,7 @@ public class MenuRestController {
         return menuService.findByRestaurantAndDate(restaurantId, date);
     }
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") int menuId) {
@@ -69,6 +70,7 @@ public class MenuRestController {
         menuService.delete(menuId);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Menu> createWithLocation(@RequestBody Menu menu) {
         LOG.info("create {}", menu);

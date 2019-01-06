@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ua.com.pollapp.model.Dish;
@@ -46,6 +47,7 @@ public class DishRestController {
         return dishService.findByDishName(dishName);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") int dishId) {
@@ -53,6 +55,7 @@ public class DishRestController {
         dishService.delete(dishId);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Dish> createWithLocation(@RequestBody Dish dish) {
         LOG.info("create {}", dish);
@@ -65,6 +68,7 @@ public class DishRestController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@RequestBody Dish dish, @PathVariable("id") int dishId) {
