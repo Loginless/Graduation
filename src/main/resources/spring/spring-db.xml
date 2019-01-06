@@ -45,8 +45,6 @@
                        value="org.ehcache.jsr107.EhcacheCachingProvider"/>
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SECOND_LEVEL_CACHE}" value="true"/>
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_QUERY_CACHE}" value="false"/> <!--default-->
-                <!--<entry key="javax.persistence.validation.group.pre-persist" value="ua.com.pollapp.View$Persist"/>-->
-                <!--<entry key="javax.persistence.validation.group.pre-update" value="ua.com.pollapp.View$Persist"/>-->
             </map>
         </property>
 

@@ -4,9 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import ua.com.pollapp.AuthorizedUser;
 import ua.com.pollapp.model.User;
 import ua.com.pollapp.repository.UserRepository;
 import ua.com.pollapp.to.UserTo;
@@ -14,13 +18,13 @@ import ua.com.pollapp.util.exception.NotFoundException;
 
 import java.util.List;
 
+import static ua.com.pollapp.util.UserUtil.updateFromTo;
 import static ua.com.pollapp.util.ValidationUtil.checkNotFound;
 import static ua.com.pollapp.util.ValidationUtil.checkNotFoundWithId;
-import static ua.com.pollapp.util.UserUtil.*;
 
 
 @Service("userService")
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private static final Sort SORT_NAME_EMAIL = new Sort(Sort.Direction.ASC, "name", "email");
 
@@ -84,4 +88,12 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(enabled);
     }
 
+    @Override
+    public AuthorizedUser loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email.toLowerCase());
+        if (user == null) {
+            throw new UsernameNotFoundException("User " + email + " is not found");
+        }
+        return new AuthorizedUser(user);
+    }
 }
