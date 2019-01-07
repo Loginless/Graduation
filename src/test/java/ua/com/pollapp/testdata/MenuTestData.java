@@ -41,8 +41,6 @@ public class MenuTestData {
     public static final List<Menu> MENULIST = List.of(MENU1, MENU2, MENU3, MENU4, MENU5, MENU6, MENU7, MENU8, MENU9, MENU10,
             MENU11, MENU12, MENU13, MENU14, MENU15, MENU16, MENU17, MENU18, MENU19);
 
-    public static final Menu MENU_Today = new Menu(MENU1_ID + 18, RESTAURANT2, LocalDate.now(), DISH11, 444);
-
     public static Menu getCreated  = new Menu(RESTAURANT1, LocalDate.of(2018, 12, 30), DISH1, 234);
 
 

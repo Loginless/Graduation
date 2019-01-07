@@ -24,10 +24,6 @@ public class Dish extends AbstractBaseEntity {
         this.dishName = dishName;
     }
 
-    public Dish(Dish dish) {
-        this(dish.getId(), dish.getDishName());
-    }
-
     public String getDishName() {
         return dishName;
     }

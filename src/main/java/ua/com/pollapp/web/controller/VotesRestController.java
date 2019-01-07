@@ -35,8 +35,9 @@ public class VotesRestController {
     @PostMapping(value = "/for", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> createWithLocation(@RequestParam(value = "restaurantId") int restaurantId) {
         LOG.info("vote for restaurant with ID {}", restaurantId);
-//        Vote created = votesService.save(authUserId(), restaurantId, LocalDateTime.now());
-        Vote created = votesService.save(authUserId(), restaurantId, testTime);
+        Vote created = votesService.save(authUserId(), restaurantId, LocalDateTime.now());
+//        Test config
+//        Vote created = votesService.save(authUserId(), restaurantId, testTime);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();

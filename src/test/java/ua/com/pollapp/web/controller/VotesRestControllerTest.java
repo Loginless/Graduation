@@ -112,7 +112,6 @@ class VotesRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(USER1)))
                 .andExpect(status().isOk())
                 .andDo(print())
-                // https://jira.spring.io/browse/SPR-14472
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(getVoteMatcher(VOTE6));
     }
@@ -125,7 +124,6 @@ class VotesRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(USER1)))
                 .andExpect(status().isOk())
                 .andDo(print())
-                // https://jira.spring.io/browse/SPR-14472
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(getVoteMatcher(VOTE3, VOTE4));
     }

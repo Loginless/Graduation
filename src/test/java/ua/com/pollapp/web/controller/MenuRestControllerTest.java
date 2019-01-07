@@ -127,7 +127,6 @@ class MenuRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(USER1)))
                 .andExpect(status().isOk())
                 .andDo(print())
-                // https://jira.spring.io/browse/SPR-14472
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(getMenuMatcher(MENU4, MENU5, MENU6));
     }

@@ -121,6 +121,8 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .andExpect(getRestaurantMatcher(RESTAURANT2, RESTAURANT3));
     }
 
+
+    //Need to uncomment Vote created method in the VotesRestController
     @Test
     void getVotesForToday() throws Exception {
         TestUtil.print(mockMvc.perform(get(REST_URL + "restaurantVotes")
