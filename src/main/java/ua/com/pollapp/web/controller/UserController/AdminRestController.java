@@ -1,4 +1,4 @@
-package ua.com.pollapp.web.controller;
+package ua.com.pollapp.web.controller.UserController;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

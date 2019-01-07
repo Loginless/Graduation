@@ -38,6 +38,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     List<Restaurant> findAllRestaurantWithVotes();
 
     @Transactional
+    @EntityGraph(attributePaths = {"menu"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT distinct r FROM Restaurant r LEFT JOIN r.menu m WHERE m.date=?1")
     List<Restaurant> findAllRestaurantWithUpdatedMenu(LocalDate date);
 

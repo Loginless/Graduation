@@ -19,46 +19,19 @@ import static ua.com.pollapp.util.ValidationUtil.assureIdConsistent;
 import static ua.com.pollapp.util.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(DishRestController.REST_URL)
+@RequestMapping(value = DishRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class DishRestController {
 
     public static final String REST_URL = "/rest/dishes";
     private static final Logger LOG = LoggerFactory.getLogger(DishRestController.class);
 
-
     @Autowired
     private DishService dishService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Dish> getAll() {
-        LOG.info("getAll");
-        return dishService.findAll();
-    }
-
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Dish get(@PathVariable("id") int dishId) {
-        LOG.info("get {}", dishId);
-        return dishService.findById(dishId);
-    }
-
-    @GetMapping(value = "/by", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Dish getByName(@RequestParam("name") String dishName) {
-        LOG.info("getByEmail {}", dishName);
-        return dishService.findByDishName(dishName);
-    }
-
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping(value = "/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") int dishId) {
-        LOG.info("delete {}", dishId);
-        dishService.delete(dishId);
-    }
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Dish> createWithLocation(@RequestBody Dish dish) {
-        LOG.info("create {}", dish);
+        LOG.info("create dish {}", dish);
         checkNew(dish);
         Dish created = dishService.create(dish);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -72,8 +45,35 @@ public class DishRestController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@RequestBody Dish dish, @PathVariable("id") int dishId) {
-        LOG.info("update {} with id={}", dish, dishId);
+        LOG.info("update dish {} with id={}", dish, dishId);
         assureIdConsistent(dish, dishId);
         dishService.update(dish);
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") int dishId) {
+        LOG.info("delete dish {}", dishId);
+        dishService.delete(dishId);
+    }
+
+    @GetMapping()
+    public List<Dish> getAll() {
+        LOG.info("get all dishes");
+        return dishService.findAll();
+    }
+
+    @GetMapping(value = "/{id}")
+    public Dish get(@PathVariable("id") int dishId) {
+        LOG.info("get dish {}", dishId);
+        return dishService.findById(dishId);
+    }
+
+    @GetMapping(value = "/by")
+    public Dish getByName(@RequestParam("dishName") String dishName) {
+        LOG.info("get dish by dishName {}", dishName);
+        return dishService.findByDishName(dishName);
+    }
+
 }

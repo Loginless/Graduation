@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ua.com.pollapp.TestUtil.userHttpBasic;
 import static ua.com.pollapp.testdata.UserTestData.*;
-import static ua.com.pollapp.web.controller.ProfileRestController.REST_URL;
+import static ua.com.pollapp.web.controller.UserController.ProfileRestController.REST_URL;
 
 
 class ProfileRestControllerTest extends AbstractControllerTest {

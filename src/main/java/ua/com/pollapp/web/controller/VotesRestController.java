@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ua.com.pollapp.model.Vote;
@@ -20,7 +21,7 @@ import java.util.List;
 import static ua.com.pollapp.util.SecurityUtil.authUserId;
 
 @RestController
-@RequestMapping(VotesRestController.REST_URL)
+@RequestMapping(value = VotesRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VotesRestController {
 
     public static final String REST_URL = "/rest/votes";
@@ -29,9 +30,9 @@ public class VotesRestController {
     LocalDateTime testTime = LocalDateTime.of(2019, 01, 05, 10, 00, 00);
 
     @Autowired
-    VotesService votesService;
+    private VotesService votesService;
 
-    @PostMapping(value = "/for", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/for", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> createWithLocation(@RequestParam(value = "restaurantId") int restaurantId) {
         LOG.info("vote for restaurant with ID {}", restaurantId);
 //        Vote created = votesService.save(authUserId(), restaurantId, LocalDateTime.now());
@@ -42,38 +43,39 @@ public class VotesRestController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @GetMapping(value = "/{voteId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Vote get(@PathVariable("voteId") int voteId) {
-        LOG.info("get {}", voteId);
-        return votesService.findById(voteId);
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") int voteId) {
+        LOG.info("delete vote by id {}", voteId);
+        votesService.delete(voteId);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping()
     public List<Vote> getAll() {
-        LOG.info("getAll");
+        LOG.info("get all votes");
         return votesService.findAll();
     }
 
-    @DeleteMapping(value = "/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") int id) {
-        LOG.info("delete {}", id);
-        votesService.delete(id);
+    @GetMapping(value = "/{voteId}")
+    public Vote get(@PathVariable("voteId") int voteId) {
+        LOG.info("get vote by id {}", voteId);
+        return votesService.findById(voteId);
     }
 
-    @GetMapping(value = "/by", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/by")
     public List<Vote> getByDate(@RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         LOG.info("get all votes by date{}", date);
         return votesService.findByDate(date);
     }
 
-    @GetMapping(value = "/byUserAndDate", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/byUserAndDate")
     public Vote getByUserIdAndDate(@RequestParam(value = "userId") int userId, @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         LOG.info("get all votes by userId {} and date{}", userId, date);
         return votesService.findByUserIdAndVoteDate(userId, date);
     }
 
-    @GetMapping(value = "/byRestaurantAndDate", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/byRestaurantAndDate")
     public List<Vote> getByRestaurantIdAndVoteDate(@RequestParam(value = "restaurantId") int restaurantId, @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         LOG.info("get all votes by restaurantId{} and date{}", restaurantId, date);
         return votesService.findByRestaurantIdAndVoteDate(restaurantId, date);
