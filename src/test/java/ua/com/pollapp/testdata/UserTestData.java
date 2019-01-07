@@ -4,6 +4,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import ua.com.pollapp.model.AbstractBaseEntity;
 import ua.com.pollapp.model.Role;
 import ua.com.pollapp.model.User;
+import ua.com.pollapp.web.json.JsonUtil;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class UserTestData {
 
 
     public static void assertMatch(User actual, User expected) {
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, "registered", "votes");
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "registered", "votes",  "password");
     }
 
     public static void assertMatch(Iterable<User> actual, User... expected) {
@@ -35,7 +36,7 @@ public class UserTestData {
     }
 
     public static void assertMatch(Iterable<User> actual, Iterable<User> expected) {
-        assertThat(actual).usingElementComparatorIgnoringFields("registered", "votes").isEqualTo(expected);
+        assertThat(actual).usingElementComparatorIgnoringFields("registered", "votes",  "password").isEqualTo(expected);
     }
 
     public static ResultMatcher getUserMatcher(User... expected) {
@@ -44,5 +45,9 @@ public class UserTestData {
 
     public static ResultMatcher getUserMatcher(User expected) {
         return result -> assertMatch(readFromJsonMvcResult(result, User.class), expected);
+    }
+
+    public static String jsonWithPassword(User user, String passw) {
+        return JsonUtil.writeAdditionProps(user, "password", passw);
     }
 }

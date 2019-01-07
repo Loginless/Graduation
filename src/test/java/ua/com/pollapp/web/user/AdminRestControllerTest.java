@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ua.com.pollapp.TestUtil.readFromJsonResultActions;
 import static ua.com.pollapp.TestUtil.userHttpBasic;
 import static ua.com.pollapp.testdata.UserTestData.*;
 
@@ -98,10 +99,12 @@ class AdminRestControllerTest extends AbstractControllerTest {
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN))
-                .content(JsonUtil.writeValue(expected)))
+                .content(jsonWithPassword(expected, "newPass")))
                 .andExpect(status().isCreated());
-        User returned = TestUtil.readFromJsonResultActions(action, User.class);
+
+        User returned = readFromJsonResultActions(action, User.class);
         expected.setId(returned.getId());
+
         assertMatch(returned, expected);
         assertMatch(userService.findAll(), ADMIN, expected, USER1, USER2);
     }

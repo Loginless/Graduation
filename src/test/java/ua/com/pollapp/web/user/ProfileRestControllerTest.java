@@ -3,6 +3,7 @@ package ua.com.pollapp.web.user;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 import ua.com.pollapp.TestUtil;
 import ua.com.pollapp.model.User;
 import ua.com.pollapp.to.UserTo;
@@ -14,6 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ua.com.pollapp.TestUtil.readFromJsonResultActions;
 import static ua.com.pollapp.TestUtil.userHttpBasic;
 import static ua.com.pollapp.testdata.UserTestData.*;
 import static ua.com.pollapp.web.controller.UserController.ProfileRestController.REST_URL;
@@ -52,13 +54,32 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void testRegister() throws Exception {
+        UserTo createdTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword");
+
+        ResultActions action = mockMvc.perform(post(REST_URL + "/register").contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(createdTo)))
+                .andDo(print())
+                .andExpect(status().isCreated());
+        User returned = readFromJsonResultActions(action, User.class);
+
+        User created = UserUtil.createNewFromTo(createdTo);
+        created.setId(returned.getId());
+
+        assertMatch(returned, created);
+        assertMatch(userService.findByEmail("newemail@ya.ru"), created);
+    }
+
+    @Test
     void testUpdate() throws Exception {
-        UserTo updatedTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword");
+        UserTo updatedTo = new UserTo(null, "newUser_1", "newUser1@yandex.ru", "newPassword1");
         mockMvc.perform(put(REST_URL).contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(USER1))
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertMatch(userService.findByEmail("newemail@ya.ru"), UserUtil.updateFromTo(new User(USER1), updatedTo));
+        System.out.println(userService.findByEmail("newUser1@yandex.ru"));
+        assertMatch(userService.findByEmail("newUser1@yandex.ru"), UserUtil.updateFromTo(new User(USER1), updatedTo));
     }
+
 }

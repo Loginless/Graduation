@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -18,6 +18,7 @@ import ua.com.pollapp.util.exception.NotFoundException;
 
 import java.util.List;
 
+import static ua.com.pollapp.util.UserUtil.prepareToSave;
 import static ua.com.pollapp.util.UserUtil.updateFromTo;
 import static ua.com.pollapp.util.ValidationUtil.checkNotFound;
 import static ua.com.pollapp.util.ValidationUtil.checkNotFoundWithId;
@@ -29,31 +30,35 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private static final Sort SORT_NAME_EMAIL = new Sort(Sort.Direction.ASC, "name", "email");
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @CacheEvict(value = "users", allEntries = true)
     @Override
     public User create(User user) {
         Assert.notNull(user, "user must not be null");
-        return userRepository.save(user);
+        return userRepository.save(prepareToSave(user, passwordEncoder));
     }
 
     @CacheEvict(value = "users", allEntries = true)
     @Override
     public void update(User user) {
         Assert.notNull(user, "user must not be null");
-        checkNotFoundWithId(userRepository.save(user), user.getId());
+        checkNotFoundWithId(userRepository.save(prepareToSave(user, passwordEncoder)), user.getId());
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @Transactional
     @Override
     public void update(UserTo userTo) {
-        User user = findById(userTo.getId());
-        userRepository.save(updateFromTo(user, userTo));
+        User user = updateFromTo(findById(userTo.getId()), userTo);
+        userRepository.save(prepareToSave(user, passwordEncoder));
     }
 
     @CacheEvict(value = "users", allEntries = true)
@@ -77,7 +82,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User findByEmail(String email) throws NotFoundException {
         Assert.notNull(email, "email must not be null");
-        return checkNotFound(userRepository.findByEmail(email), "email=" + email);
+        return checkNotFound(userRepository.findByEmail(email.toLowerCase()), "email=" + email);
     }
 
     @CacheEvict(value = "users", allEntries = true)
