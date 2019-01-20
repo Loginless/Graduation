@@ -8,7 +8,7 @@ import ua.com.pollapp.TestUtil;
 import ua.com.pollapp.model.Role;
 import ua.com.pollapp.model.User;
 import ua.com.pollapp.web.AbstractControllerTest;
-import ua.com.pollapp.web.controller.UserController.AdminRestController;
+import ua.com.pollapp.web.controller.usercontroller.AdminRestController;
 import ua.com.pollapp.web.json.JsonUtil;
 
 import java.util.Collections;

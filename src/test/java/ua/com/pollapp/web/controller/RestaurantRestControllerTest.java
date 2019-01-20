@@ -114,7 +114,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getRestaurantsByMenuDate() throws Exception {
-        TestUtil.print(mockMvc.perform(get(REST_URL + "byMenuDate?date=" + LocalDate.of(2018, 12, 03))
+        TestUtil.print(mockMvc.perform(get(REST_URL + "byMenuDate?date=" + LocalDate.of(2018, 12, 3))
                 .with(userHttpBasic(USER1))))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

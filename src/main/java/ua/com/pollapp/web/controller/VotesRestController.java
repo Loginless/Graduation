@@ -27,7 +27,7 @@ public class VotesRestController {
     public static final String REST_URL = "/rest/votes";
     private static final Logger LOG = LoggerFactory.getLogger(RestaurantRestController.class);
 
-    LocalDateTime testTime = LocalDateTime.of(2019, 01, 05, 10, 00, 00);
+    LocalDateTime testTime = LocalDateTime.of(2019, 1, 5, 10, 0, 0);
 
     @Autowired
     private VotesService votesService;
@@ -52,6 +52,7 @@ public class VotesRestController {
         votesService.delete(voteId);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping()
     public List<Vote> getAll() {
         LOG.info("get all votes");
@@ -70,6 +71,7 @@ public class VotesRestController {
         return votesService.findByDate(date);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/byUserAndDate")
     public Vote getByUserIdAndDate(@RequestParam(value = "userId") int userId, @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         LOG.info("get all votes by userId {} and date{}", userId, date);

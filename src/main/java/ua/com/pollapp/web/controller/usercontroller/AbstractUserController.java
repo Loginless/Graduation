@@ -1,4 +1,4 @@
-package ua.com.pollapp.web.controller.UserController;
+package ua.com.pollapp.web.controller.usercontroller;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

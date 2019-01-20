@@ -67,7 +67,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         checkNotFoundWithId(userRepository.delete(userId) != 0, userId);
     }
 
-    @Cacheable("users")
     @Override
     public List<User> findAll() {
         return userRepository.findAll(SORT_NAME_EMAIL);
